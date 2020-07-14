@@ -1,18 +1,36 @@
-var createError  = require('http-errors');
-var express      = require('express');
-var path         = require('path');
-var cookieParser = require('cookie-parser');
-var logger       = require('morgan');
+var createError    = require('http-errors');
+var express        = require('express');
+var path           = require('path');
+var cookieParser   = require('cookie-parser');
+var logger         = require('morgan');
 
+const mongoose     = require('mongoose');
 const dotenv       = require('dotenv').config();
 const session      = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf         = require('csurf');
 
+// MongoDB configuration
+var configDB    = require('./config/database.js');
+
+// Routes
 var votesRoutes = require('./routes/votes');
 var usersRoutes = require('./routes/users');
 
 var app = express();
+
+/**
+ * @MidleWare
+ * Flash Messages
+ */
+app.use('/*', function (req, res, next) {
+  res.locals.msgFlash = {}
+  if (req.session.msgFlash) {
+    res.locals.msgFlash = req.session.msgFlash
+    req.session.msgFlash = null
+  }
+  next();
+})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,20 +45,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(votesRoutes);
 app.use('/users', usersRoutes);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use((error, req, res, next) => {
+  const status = error.statusCode || 500;
+  const message = error.message;
+  res.status(status).render('error',{
+    message: message,
+    status: status
+  });
+})
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+// Connection to mongoDB using moongose
+mongoose.connect(configDB.url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+})
+.then(() => {
+  console.log('connection to database established successfully')
+})
+.catch(err =>{
+  console.log('An error occursed ', err);
 });
 
 module.exports = app;
