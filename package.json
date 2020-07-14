@@ -1,0 +1,29 @@
+{
+  "name": "refonte-simplon-vote",
+  "version": "2.0.0",
+  "description": "Refonte total du projet de vote lors de la formation de Simplon",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "author": "ABRADOR Daryl",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-mongodb-session": "^2.3.3",
+    "cookie-parser": "~1.4.4",
+    "csurf": "^1.11.0",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "express-session": "^1.17.1",
+    "express-validator": "^6.6.0",
+    "http-errors": "~1.6.3",
+    "jsdoc": "^3.6.4",
+    "mongoose": "^5.9.24",
+    "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
