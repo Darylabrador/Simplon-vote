@@ -18,6 +18,15 @@ const authRoutes = require('./routes/auth');
 
 var app = express();
 
+// Add robust session handler
+const store = new MongoDBStore({
+  uri: configDB.url,
+  collection: 'sessions'
+});
+
+// Security
+const csrfProtection = csrf();
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -27,6 +36,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Simple session : Need more secure at the end
+app.use(
+  session({
+    name: 'simplonVote',
+    secret: ['asq4b4PR', 'blu3ey3spictures', '4lotofw0rdind3spair'],
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+      maxAge: 1 * 60 * 60 * 1000 // 1 hour
+    },
+    store: store
+  })
+);
+
+app.use(csrfProtection);
+
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
 
 // Routes handler
 app.use('/', authRoutes);

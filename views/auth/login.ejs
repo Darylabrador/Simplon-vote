@@ -5,6 +5,7 @@
         <main>
             <div class="jumbotron">
                 <form action="/login" class="form" method="POST">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <div class="form-group">
                         <label>E mail</label>
                         <input name="email" type="mail" class="form-control" required>

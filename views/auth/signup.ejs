@@ -5,6 +5,7 @@
         <main>
             <div class="jumbotron">
                 <form action="/signup" class="form" method="POST">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <div class="form-group">
                         <label>Pseudo</label>
                         <input name="pseudo" type="text" class="form-control" required>
