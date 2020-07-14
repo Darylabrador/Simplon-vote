@@ -14,23 +14,9 @@ const csrf         = require('csurf');
 var configDB    = require('./config/database.js');
 
 // Routes
-var votesRoutes = require('./routes/votes');
-var usersRoutes = require('./routes/users');
+const authRoutes = require('./routes/auth');
 
 var app = express();
-
-/**
- * @MidleWare
- * Flash Messages
- */
-app.use('/*', function (req, res, next) {
-  res.locals.msgFlash = {}
-  if (req.session.msgFlash) {
-    res.locals.msgFlash = req.session.msgFlash
-    req.session.msgFlash = null
-  }
-  next();
-})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -42,8 +28,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(votesRoutes);
-app.use('/users', usersRoutes);
+// Routes handler
+app.use('/', authRoutes);
 
 // error handler
 app.use((error, req, res, next) => {

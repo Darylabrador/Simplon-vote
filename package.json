@@ -4,7 +4,10 @@
   "description": "Refonte total du projet de vote lors de la formation de Simplon",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "dev": "SET NODE_ENV=development && nodemon ./bin/www",
+    "prod": "SET NODE_ENV=production && node ./bin/www",
+    "doc": "./node_modules/.bin/jsdoc -c ./js-doc-conf.json"
   },
   "author": "ABRADOR Daryl",
   "dependencies": {
