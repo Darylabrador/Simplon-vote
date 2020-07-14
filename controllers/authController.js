@@ -32,3 +32,37 @@ exports.getSignup = (req, res, next) => {
         path: ''
     });
 };
+
+/**
+ * Handle post login
+ *
+ * @function postLogin
+ * @returns {VIEW} redirect to '/votes/dashboard'
+ * @throws Will throw an error if one error occursed
+ */
+exports.postLogin = (req, res, next) =>{
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        const error = new Error('Validation failed');
+        error.statusCode = 422;
+        throw error;
+    }
+}
+
+/**
+ * Handle post signup
+ *
+ * @function postSignup
+ * @returns {VIEW} redirect to '/login'
+ * @throws Will throw an error if one error occursed
+ */
+exports.postSignup = (req, res, next) =>{
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()){
+        const error = new Error('Validation failed');
+        error.statusCode = 422;
+        throw error;
+    }
+}
