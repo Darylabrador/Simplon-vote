@@ -14,7 +14,8 @@ const User = require('../models/users');
 exports.getLogin = (req, res, next) =>{
     res.render('auth/login', {
         title: "Connexion",
-        path: ''
+        path: '',
+        errorMessage: null
     });
 };
 
@@ -29,7 +30,8 @@ exports.getLogin = (req, res, next) =>{
 exports.getSignup = (req, res, next) => {
     res.render('auth/signup', {
         title: "Inscription",
-        path: ''
+        path: '',
+        errorMessage: null
     });
 };
 
@@ -43,13 +45,14 @@ exports.getSignup = (req, res, next) => {
 exports.postLogin = (req, res, next) =>{
     const { email, password } = req.body;
     const errors = validationResult(req);
-    let userFound;
+    var userFound;
 
     if (!errors.isEmpty()) {
         return res.status(422).render('auth/login', {
             path: '/login',
             title: 'Connexion',
             errorMessage: errors.array()[0].msg,
+            hasError: true,
             oldInput: {
                 email: email,
                 password: password
@@ -61,25 +64,21 @@ exports.postLogin = (req, res, next) =>{
     User.findOne({email: email})
         .then(user =>{
             if(!user){
-                const error = new Error('Aucun utilisateur n\'a été trouvé');
-                error.statusCode = 401;
-                throw error;
-            }
-            userFound = user;
-            return bcrypt.compare(password, user.password);
-        })
-        .then(isEqual =>{
-            if(isEqual){
-                req.session.isLoggedIn = true;
-                req.session.user.id    = userFound._id;
-                return req.session.save(err =>{
-                    console.log(err);
-                    res.redirect('/');
+                req.flash('error', 'Adresse email ou mot de passe invalide');
+                return res.redirect('/login');;
+            }  
+            bcrypt.compare(password, user.password)
+                .then(isEqual => {
+                    if (isEqual) {
+                        req.session.isLoggedIn = true;
+                        req.session.userId = user._id;
+                        return req.session.save(err => {
+                            res.redirect('/');
+                        })
+                    }
+                    req.flash('error', 'Adresse email ou mot de passe invalide');
+                    res.redirect('/login');
                 })
-            }
-            req.flash('error', 'Adresse email ou mot de passe invalide');
-            res.redirect('/login');
-           
         })
         .catch(err => {
             if (!err.statusCode) {

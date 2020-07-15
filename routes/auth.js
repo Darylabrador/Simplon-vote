@@ -22,7 +22,8 @@ router.post('/login',
     authController.postLogin
 );
 
-router.post('/signup', 
+router.post(
+    '/signup', 
     [
         body('email')
             .isEmail()

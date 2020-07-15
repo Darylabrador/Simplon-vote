@@ -42,15 +42,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
     name: 'simplonVote',
-    secret: ['asq4b4PR', 'blu3ey3spictures', '4lotofw0rdind3spair'],
+    secret: 'asq4b4PR',
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: true,
-      sameSite: true,
-      maxAge: 1 * 60 * 60 * 1000 // 1 hour
-    },
     store: store
   })
 );
@@ -65,17 +59,17 @@ app.use((req, res, next) => {
 });
 
 // Routes handler
-app.use('/', authRoutes);
+app.use(authRoutes);
 
 // error handler
-app.use((error, req, res, next) => {
-  const status = error.statusCode || 500;
-  const message = error.message;
-  res.status(status).render('error',{
-    message: message,
-    status: status
-  });
-})
+// app.use((error, req, res, next) => {
+//   const status = error.statusCode || 500;
+//   const message = error.message;
+//   res.status(status).render('error',{
+//     message: message,
+//     status: status
+//   });
+// })
 
 // Connection to mongoDB using moongose
 mongoose.connect(configDB.url, {
