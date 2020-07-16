@@ -1,33 +1,49 @@
 <% include ../includes/head %>
-    </head>
-    <body>
-        <% include ../includes/navigation %>
-        <main>
-            <% if (errorMessage) { %>
-            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-                <strong><%= errorMessage %></strong>.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <% } %>
-            <div class="jumbotron">
-                <form action="/login" class="form" method="POST">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <div class="form-group">
-                        <label>E mail</label>
-                        <input name="email" type="mail" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Mot de passe</label>
-                        <input name="password" type="password" class="form-control" required>
-                    </div>
-                    <div class="col-sm-12 text-center mt-5">
-                        <button type="submit" class="btn btn-primary">Se connecter</button>
-                    </div>
-                </form>
-            </div>
-        </main>
-        <% include ../includes/footer %>
-    </body>
+</head>
+
+<body>
+    <% include ../includes/navigation %>
+    <main>
+        <% if (errorMessage) { %>
+        <div class="alert alert-danger alert-dismissible fade show mt-0" role="alert">
+            <strong><%= errorMessage %></strong>.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <% } %>
+
+        <% if (error_message.length != 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show mt-0" role="alert">
+            <strong><%= error_message %></strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <% } %>
+
+        <div class="jumbotron">
+            <form action="/login" class="form" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <div class="form-group">
+                    <label>E mail</label>
+                    <input name="email" type="mail"
+                        class="form-control <%= validationErrors.find(e => e.param === 'email') ? 'border border-danger' : '' %>"
+                        required value="<% if(hasError){%><%=oldInput.email%><% } %>">
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input name="password" type="password"
+                        class="form-control <%= validationErrors.find(e => e.param === 'password') ? 'border border-danger' : '' %>"
+                        required value="<% if(hasError){%><%=oldInput.password%> <% } %>">
+                </div>
+                <div class="col-sm-12 text-center mt-5">
+                    <button type="submit" class="btn btn-primary"> S'inscrire </button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <% include ../includes/footer %>
+</body>
+
 </html>

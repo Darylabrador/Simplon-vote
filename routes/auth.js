@@ -14,8 +14,9 @@ router.post('/login',
     [
         body('email')
             .isEmail()
-            .withMessage('Veuillez saisir une adresse email valide'),
-        body('password')
+            .trim()
+            .withMessage('Adresse email est invalide'),
+        body('password', 'Votre mot de passe doit contenir au minimum 5 caractères')
             .isLength({min: 5})
             .trim()
     ], 
@@ -25,8 +26,12 @@ router.post('/login',
 router.post(
     '/signup', 
     [
+        body('pseudo', 'Veuillez renseigner un pseudo')
+            .not()
+            .isEmpty(),
         body('email')
             .isEmail()
+            .trim()
             .withMessage('Veuillez saisir une adresse email valide'),
         body('password','Veuillez saisir un mot de passe qui contient au minimum 5 caractères')
             .isLength({ min: 5 })

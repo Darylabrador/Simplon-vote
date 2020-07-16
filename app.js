@@ -17,6 +17,9 @@ var configDB    = require('./config/database.js');
 // Routes
 const authRoutes = require('./routes/auth');
 
+// error controller 
+const errorController = require('./controllers/errorController');
+
 var app = express();
 
 // Add robust session handler
@@ -58,18 +61,25 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((req, res, next) =>{
+  res.locals.success_message = req.flash('success');
+  res.locals.error_message   = req.flash('error');
+  next();
+});
+
 // Routes handler
 app.use(authRoutes);
 
+app.use(errorController.get404);
+
 // error handler
-// app.use((error, req, res, next) => {
-//   const status = error.statusCode || 500;
-//   const message = error.message;
-//   res.status(status).render('error',{
-//     message: message,
-//     status: status
-//   });
-// })
+app.use((error, req, res, next) => {
+  res.status(error.httpStatusCode).render('error', {
+    title: 'Une erreur est servenue',
+    path: '/errors',
+    statusCode: error.httpStatusCode
+  });
+});
 
 // Connection to mongoDB using moongose
 mongoose.connect(configDB.url, {
@@ -78,7 +88,7 @@ mongoose.connect(configDB.url, {
   useFindAndModify: false
 })
 .then(() => {
-  console.log('connection to database established successfully')
+  console.log('connection to database established successfully');
 })
 .catch(err =>{
   console.log('An error occursed ', err);

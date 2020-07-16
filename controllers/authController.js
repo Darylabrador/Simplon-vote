@@ -15,7 +15,9 @@ exports.getLogin = (req, res, next) =>{
     res.render('auth/login', {
         title: "Connexion",
         path: '',
-        errorMessage: null
+        errorMessage: null,
+        hasError: false,
+        validationErrors: []
     });
 };
 
@@ -31,7 +33,9 @@ exports.getSignup = (req, res, next) => {
     res.render('auth/signup', {
         title: "Inscription",
         path: '',
-        errorMessage: null
+        errorMessage: null,
+        hasError: false,
+        validationErrors: []
     });
 };
 
@@ -45,7 +49,6 @@ exports.getSignup = (req, res, next) => {
 exports.postLogin = (req, res, next) =>{
     const { email, password } = req.body;
     const errors = validationResult(req);
-    var userFound;
 
     if (!errors.isEmpty()) {
         return res.status(422).render('auth/login', {
@@ -81,10 +84,9 @@ exports.postLogin = (req, res, next) =>{
                 })
         })
         .catch(err => {
-            if (!err.statusCode) {
-                err.statusCode = 500;
-            }
-            next(err);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         })
 }
 
@@ -104,6 +106,7 @@ exports.postSignup = (req, res, next) =>{
             path: '/signup',
             title: 'Inscription',
             errorMessage: errors.array()[0].msg,
+            hasError: true,
             oldInput: {
                 pseudo: pseudo,
                 email: email,
@@ -127,9 +130,31 @@ exports.postSignup = (req, res, next) =>{
             res.redirect('/login');
         })
         .catch(err =>{
-            if (!err.statusCode) {
-                err.statusCode = 500;
-            }
-            next(err);
-        })
+            return res.status(500).render('auth/signup', {
+                path: '/signup',
+                title: 'Inscription',
+                errorMessage: "Adresse email ou pseudo existe déjà",
+                hasError: true,
+                oldInput: {
+                    pseudo: pseudo,
+                    email: email,
+                    password: password,
+                    passwordConfirm: passwordConfirm
+                },
+                validationErrors: []
+            });
+        });
+};
+
+
+/**
+ * Handle logout
+ *
+ * @function postLogout
+ * @returns {VIEW} redirect to '/login'
+ */
+exports.postLogout = (req, res, next) =>{
+    req.session.destroy((err) => {
+        res.redirect('/login');
+    });
 };
