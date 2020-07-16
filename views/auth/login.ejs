@@ -26,7 +26,7 @@
             <form action="/login" class="form" method="POST">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div class="form-group">
-                    <label>E mail</label>
+                    <label>Adresse email</label>
                     <input name="email" type="mail"
                         class="form-control <%= validationErrors.find(e => e.param === 'email') ? 'border border-danger' : '' %>"
                         required value="<% if(hasError){%><%=oldInput.email%><% } %>">
@@ -38,7 +38,7 @@
                         required value="<% if(hasError){%><%=oldInput.password%> <% } %>">
                 </div>
                 <div class="col-sm-12 text-center mt-5">
-                    <button type="submit" class="btn btn-primary"> S'inscrire </button>
+                    <button type="submit" class="btn btn-primary"> se connecter </button>
                 </div>
             </form>
         </div>

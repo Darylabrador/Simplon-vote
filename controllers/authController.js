@@ -76,8 +76,8 @@ exports.postLogin = (req, res, next) =>{
                         req.session.isLoggedIn = true;
                         req.session.userId = user._id;
                         return req.session.save(err => {
-                            res.redirect('/');
-                        })
+                            res.redirect('/dashboard');
+                        });
                     }
                     req.flash('error', 'Adresse email ou mot de passe invalide');
                     res.redirect('/login');
@@ -155,6 +155,7 @@ exports.postSignup = (req, res, next) =>{
  */
 exports.postLogout = (req, res, next) =>{
     req.session.destroy((err) => {
+        console.log(err);
         res.redirect('/login');
     });
 };

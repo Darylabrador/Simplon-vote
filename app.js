@@ -19,6 +19,7 @@ const authRoutes = require('./routes/auth');
 
 // error controller 
 const errorController = require('./controllers/errorController');
+const User            = require('./models/users');
 
 var app = express();
 
@@ -41,7 +42,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Simple session : Need more secure at the end
+// Simple session
 app.use(
   session({
     name: 'simplonVote',
@@ -55,15 +56,32 @@ app.use(
 app.use(csrfProtection);
 app.use(flash());
 
-app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.session.isLoggedIn;
-  res.locals.csrfToken = req.csrfToken();
-  next();
+// pass variables locally
+app.use((req, res, next) =>{
+  if (!req.session.userId) {
+    return next();
+  }
+  User.findById(req.session.userId)
+    .then(user => {
+      if (!user) {
+        return next();
+      }
+      req.user = user;
+      res.locals.currentUser = user.pseudo;
+      next();
+    })
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      next(error);
+    });
 });
 
-app.use((req, res, next) =>{
+app.use((req, res, next) => {
   res.locals.success_message = req.flash('success');
   res.locals.error_message   = req.flash('error');
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken       = req.csrfToken();
   next();
 });
 
@@ -72,7 +90,7 @@ app.use(authRoutes);
 
 app.use(errorController.get404);
 
-// error handler
+// general error handler (all except 404)
 app.use((error, req, res, next) => {
   res.status(error.httpStatusCode).render('error', {
     title: 'Une erreur est servenue',
