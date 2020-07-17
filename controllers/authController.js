@@ -150,12 +150,14 @@ exports.postSignup = (req, res, next) =>{
 /**
  * Handle logout
  *
- * @function postLogout
+ * @function logout
  * @returns {VIEW} redirect to '/login'
  */
-exports.postLogout = (req, res, next) =>{
+exports.logout = (req, res, next) =>{
     req.session.destroy((err) => {
-        console.log(err);
+        if(err){
+            console.log(err);
+        }
         res.redirect('/login');
     });
 };

@@ -3,8 +3,11 @@ const { body }       = require('express-validator');
 
 const authController = require('../controllers/authController');
 const User           = require('../models/users');
+const app = require('../app');
 
 const router         = express.Router();
+
+router.get('/', authController.getLogin);
 
 router.get('/login', authController.getLogin);
 
@@ -46,5 +49,7 @@ router.post(
     ], 
     authController.postSignup
 );
+
+router.get('/logout', authController.logout);
 
 module.exports = router;

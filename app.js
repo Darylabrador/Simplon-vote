@@ -10,15 +10,18 @@ const session      = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf         = require('csurf');
 const flash        = require('connect-flash');
+const isAuth       = require('./middleware/is-auth');
 
 // MongoDB configuration
 var configDB    = require('./config/database.js');
 
 // Routes
 const authRoutes = require('./routes/auth');
+const voteRoutes = require('./routes/votes');
 
 // error controller 
 const errorController = require('./controllers/errorController');
+const votesController = require('./controllers/votesController');
 const User            = require('./models/users');
 
 var app = express();
@@ -67,7 +70,7 @@ app.use((req, res, next) =>{
         return next();
       }
       req.user = user;
-      res.locals.currentUser = user.pseudo;
+      res.locals.currentUser = user.login;
       next();
     })
     .catch(err => {
@@ -87,6 +90,8 @@ app.use((req, res, next) => {
 
 // Routes handler
 app.use(authRoutes);
+app.get('/dashboard', isAuth, votesController.getDashboard);
+app.use('/dashboard', voteRoutes);
 
 app.use(errorController.get404);
 
