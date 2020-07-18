@@ -70,7 +70,8 @@ app.use((req, res, next) =>{
         return next();
       }
       req.user = user;
-      res.locals.currentUser = user.login;
+      res.locals.currentUser   = user.login;
+      res.locals.currentUserId = user._id;
       next();
     })
     .catch(err => {
