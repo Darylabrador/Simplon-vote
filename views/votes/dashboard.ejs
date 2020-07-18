@@ -3,7 +3,18 @@
     <body>
         <% include ../includes/navigation %>
         <main>
-            <h1> You are on the dashboard </h1>
+            <div class="row">
+                <% if(votes.length == 0) { %>
+                <div class="d-flex justify-content-center w-100">
+                    <h5 class="alert alert-info my-5"> Aucun vote n'est disponible pour le moment ! </h5>
+                </div>
+                <% } else { %>
+                    <%= votes %>
+                    <% votes.forEach(vote => { %>
+                    
+                    <% }) %>
+                <% } %>
+            </div>
         </main>
         <% include ../includes/footer %>
         <% include ../includes/modals %>

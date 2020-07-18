@@ -4,7 +4,29 @@
 <body>
     <% include ../includes/navigation %>
     <main>
-        <h1> You are on detail vote page </h1>
+        <div class="jumbotron">
+            <div class="text-center">
+                <h3 class="text-danger"><%= vote.subject %></h3>
+                <p class="text-muted"><%= vote.nbVote %> / <%= vote.quota %> votes </p>
+            </div>
+            <% if (alreadyVoted == 0) { %>
+            <h5 class="mt-5 text-center"> Vous ne pouvez plus voter</h5>
+            <% } else { %>
+            <form class="form text-center mt-5" action="#" method="POST">
+                <input type="hidden" name="userId" value="<%= locals.currentUser.id %>">
+                <input type="hidden" name="voteId" value="<%= vote._id %>">
+                <div class="form-group">
+                    <% vote.choices.forEach(choice =>{ %>
+                    <div>
+                        <input type="radio" name="choice" value="<%= vote.choices.indexOf(choice) %>">
+                        <label><%= choice %></label>
+                    </div>
+                    <% }) %>
+                </div>
+                <button type="submit" class="btn btn-primary w-25">Voter</button>
+            </form>
+            <% } %>
+        </div>
     </main>
     <% include ../includes/footer %>
     <% include ../includes/modals %>

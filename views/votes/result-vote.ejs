@@ -4,7 +4,13 @@
 <body>
     <% include ../includes/navigation %>
     <main>
-        <h1> You are on the result vote </h1>
+            <div class="jumbotron">
+                <h1>Résultats</h1>
+                <h5><%= subject %></h5>
+                <% resultat.forEach(element =>{ %>
+                <p> le choix : <%= element.choix %> (<%= Math.round(100*(element.nbvote/totaloptions)) %> %)</p>
+                <% }) %>
+            </div>
     </main>
     <% include ../includes/footer %>
     <% include ../includes/modals %>
