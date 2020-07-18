@@ -133,6 +133,37 @@ exports.showFinished = async (req, res, next) => {
 
 
 /**
+ * Get one vote page
+ * 
+ * Render one vote page
+ * @function showVote
+ * @returns {VIEW} detail view
+ * @throws Will throw an error if one error occursed
+ */
+exports.showVote = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const vote = await Vote.findById(id).populate({ path: 'createdBy', select: 'login -_id' }).exec();
+        const notVotedYet = await UsersVotes.count({ user: req.user._id, vote: id, choice: null });
+        if (!vote) {
+            req.flash('error', 'vote non trouvé');
+            return res.redirect('/dashboard');
+        }
+        res.render("votes/details", {
+            title: "Détails",
+            path: '/dashboard/details',
+            vote: vote,
+            alreadyVoted: notVotedYet
+        }); 
+    } catch (error) {
+        const err = new Error(error);
+        err.httpStatusCode = 500;
+        return next(err);
+    }
+};
+
+
+/**
  * Get showResult page for specific vote
  * 
  * Render the showResult page for specific vote

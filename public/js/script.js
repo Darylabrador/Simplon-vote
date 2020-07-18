@@ -5,6 +5,7 @@ let choiceContainer  = document.querySelector('#choiceContainer');
 let btnAddLigne      = document.querySelector('#btnAddLigne');
 let messageInterface = document.querySelector('#error');
 let visibility       = document.querySelector('#visibility');
+let token            = document.querySelector('[name="_csrf"]').value;
 let errCompteur = 0;
 
 /**
@@ -35,7 +36,7 @@ function showError(message) {
             messageInterface.classList.remove("alert", "alert-danger");
             messageInterface.innerHTML = "";
             errCompteur = 0;
-        }, 6000);
+        }, 10000);
     }
 }
 
@@ -103,8 +104,11 @@ if (voteForm !== null){
 
             $.ajax({
                 type: "POST",
-                url: "/votes",
-                contentType: "application/json; charset=UTF-8",
+                url: "/dashboard/vote/add",
+                headers: {
+                    'csrf-token' : token,
+                    'Content-Type' : 'application/json; charset=UTF-8'
+                },
                 data: JSON.stringify(data),
                 dataType: "json",
                 success: function (response) {
@@ -113,6 +117,12 @@ if (voteForm !== null){
                             errCompteur++;
                             if (errCompteur == 1) {
                                 showSuccess(response.message);
+                                voteForm.reset();
+
+                                while (choiceContainer.lastChild) {
+                                    choiceContainer.removeChild(choiceContainer.lastChild);
+                                }
+
                                 location.href = '/dashboard';
                             }
                         }else{
@@ -123,12 +133,7 @@ if (voteForm !== null){
                         }
                     }
                 }
-            });
- 
-            voteForm.reset();
-            while (choiceContainer.lastChild){
-                choiceContainer.removeChild(choiceContainer.lastChild);
-            }
+            })
         }
     })
 }

@@ -7,9 +7,12 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+
         <div id="error"> </div>
+
         <form id="voteForm" method="POST">
-          <input type="hidden" id="userId" name="userId" value="<%= locals.currentUser.id %>">
+          <input type="hidden" id="userId" name="userId" value="<%= locals.currentUserId %>">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div class="modal-body">
               <div class="form-group">
                 <label for="visibility">Visibilité</label>
@@ -36,7 +39,7 @@
               </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Création</button>
+                <button type="submit" class="btn btn-primary">Créer</button>
             </div>
         </form>
       </div>
