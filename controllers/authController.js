@@ -46,7 +46,7 @@ exports.getSignup = (req, res, next) => {
  * @returns {VIEW} redirect to '/votes/dashboard'
  * @throws Will throw an error if one error occursed
  */
-exports.postLogin = (req, res, next) =>{
+exports.postLogin = async (req, res, next) =>{
     const { email, password } = req.body;
     const errors = validationResult(req);
 
@@ -64,30 +64,31 @@ exports.postLogin = (req, res, next) =>{
         });
     }
 
-    User.findOne({email: email})
-        .then(user =>{
-            if(!user){
-                req.flash('error', 'Adresse email ou mot de passe invalide');
-                return res.redirect('/login');;
-            }  
-            bcrypt.compare(password, user.password)
-                .then(isEqual => {
-                    if (isEqual) {
-                        req.session.isLoggedIn = true;
-                        req.session.userId = user._id;
-                        return req.session.save(err => {
-                            res.redirect('/dashboard');
-                        });
-                    }
-                    req.flash('error', 'Adresse email ou mot de passe invalide');
-                    res.redirect('/login');
-                })
-        })
-        .catch(err => {
-            const error = new Error(err);
-            error.httpStatusCode = 500;
-            return next(error);
-        })
+    try {
+        const user = await User.findOne({ email: email });
+
+        if (!user) {
+            req.flash('error', 'Adresse email ou mot de passe invalide');
+            return res.redirect('/login');;
+        }
+
+        const isEqual = await bcrypt.compare(password, user.password);
+
+        if (isEqual) {
+            req.session.isLoggedIn = true;
+            req.session.userId = user._id;
+            return req.session.save(err => {
+                res.redirect('/dashboard');
+            });
+        }
+        req.flash('error', 'Adresse email ou mot de passe invalide');
+        res.redirect('/login');
+
+    } catch (error) {
+        const err = new Error(error);
+        err.httpStatusCode = 500;
+        return next(err);
+    }
 }
 
 /**
@@ -97,7 +98,7 @@ exports.postLogin = (req, res, next) =>{
  * @returns {VIEW} redirect to '/login'
  * @throws Will throw an error if one error occursed
  */
-exports.postSignup = (req, res, next) =>{
+exports.postSignup = async (req, res, next) =>{
     const { pseudo, email, password, passwordConfirm } = req.body;
     const errors = validationResult(req);
 
@@ -117,33 +118,33 @@ exports.postSignup = (req, res, next) =>{
         });
     }
 
-    bcrypt.hash(password, 12)
-        .then(hashedPwd =>{
-            const user = new User({
-                login: pseudo,
-                email: email,
-                password: hashedPwd
-            });
-            return user.save();
-        })
-        .then(result =>{
-            res.redirect('/login');
-        })
-        .catch(err =>{
-            return res.status(500).render('auth/signup', {
-                path: '/signup',
-                title: 'Inscription',
-                errorMessage: "Adresse email ou pseudo existe déjà",
-                hasError: true,
-                oldInput: {
-                    pseudo: pseudo,
-                    email: email,
-                    password: password,
-                    passwordConfirm: passwordConfirm
-                },
-                validationErrors: []
-            });
+    try {
+        const hashedPwd = await bcrypt.hash(password, 12);
+
+        const user = new User({
+            login: pseudo,
+            email: email,
+            password: hashedPwd
         });
+
+        await user.save();
+        res.redirect('/login');
+
+    } catch (error) {
+        return res.status(500).render('auth/signup', {
+            path: '/signup',
+            title: 'Inscription',
+            errorMessage: "Adresse email ou pseudo existe déjà",
+            hasError: true,
+            oldInput: {
+                pseudo: pseudo,
+                email: email,
+                password: password,
+                passwordConfirm: passwordConfirm
+            },
+            validationErrors: []
+        });
+    }
 };
 
 
