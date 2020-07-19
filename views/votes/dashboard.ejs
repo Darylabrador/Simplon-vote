@@ -3,18 +3,80 @@
     <body>
         <% include ../includes/navigation %>
         <main>
-            <div class="row">
-                <% if(votes.length == 0) { %>
-                <div class="d-flex justify-content-center w-100">
-                    <h5 class="alert alert-info my-5"> Aucun vote n'est disponible pour le moment ! </h5>
-                </div>
+    <div class="row">
+        <% if(votes.length == 0) { %>
+    
+        <div class="d-flex justify-content-center w-100">
+            <h5 class="alert alert-info my-5"> Aucun vote n'est disponible pour le moment ! </h5>
+        </div>
+    
+        <% } else { %>
+
+            <% votes.forEach(function(vote) { %>
+
+                <% if(vote.participants.includes(locals.currentUserId)) { %>
+
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="text-center">
+                                    <b><%= vote.subject %></b>
+                                    <small>créer par
+                                        <% if (vote.createdBy != null) { %>
+                                        <%= vote.createdBy.login %> <br> Statut : <%= vote.status %>
+                                        <% } %>
+                                    </small>
+                                </p>
+
+                                <% if (vote.status == 'inprogress') { %>
+                                <a class="text-center btn btn-outline-secondary w-25 mb-3" href="#"> Voter </a>
+                                <% } else if (vote.status == 'finished') { %>
+                                <a href="/dashboard/result/<%= vote._id %>">Voir le résultat</a>
+                                <% } else { %>                       
+                                <p class="text-right"> <%= vote.participants.length %> / <%= vote.quota %> Participants </p>
+                                <% } %>
+
+                                <div class="progress">
+                                    <% var vot = vote.participants.length/vote.quota*100 %>
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: <%= vot %>%;"
+                                        aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%= vot %>%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 <% } else { %>
-                    <%= votes %>
-                    <% votes.forEach(vote => { %>
-                    
-                    <% }) %>
+
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="text-center">
+                                    <b><%= vote.subject %></b>
+                                    <br>
+                                    <small>
+                                        Statut : <%= vote.status %>
+                                    </small>
+                                </p>
+
+                                <% if (vote.status == 'finished') { %>
+                                <a href="/dashboard/result/<%= vote._id %>">Voir le résultat</a>
+                                <% } else { %>
+                                <p class="text-right"> <%= vote.participants.length %> / <%= vote.quota %> Participants </p>
+                                <% } %>
+                          
+                                <div class="progress">
+                                    <% var vot = vote.participants.length/vote.quota*100 %>
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: <%= vot %>%;"
+                                        aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%= vot %>%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 <% } %>
-            </div>
+
+            <% }); %>
+        <% } %>  
+                
         </main>
         <% include ../includes/footer %>
         <% include ../includes/modals %>

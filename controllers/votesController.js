@@ -15,6 +15,7 @@ const UsersVotes = require('../models/usersVotes');
 exports.getDashboard = async (req, res, next) => {
     try {
         const votes = await Vote.find().populate('createdBy').exec();
+        console.log(votes)
         res.render('votes/dashboard', {
             title: "Dashboard",
             path: '/dashboard',
