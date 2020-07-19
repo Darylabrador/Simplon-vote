@@ -15,9 +15,9 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <p class="text-center">
-                                            <b><%= vote.subject %></b> <br/> 
+                                            <b><%= vote.subject %></b> <br>
                                             <small>
-                                                By <% if (vote.createdBy != null) { %>
+                                                Créer par <% if (vote.createdBy != null) { %>
                                                 <%= vote.createdBy.login %> <br> Status : <%= vote.status %>
                                                 <% } %>
                                             </small>

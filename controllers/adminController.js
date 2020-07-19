@@ -96,17 +96,18 @@ exports.postEnrolledUser = async (req, res, next) =>{
                 });
 
                 await userVote.save();
-                await Vote.updateOne({ _id: voteId }, { $push: { participants: userId } });
+                const vote = await Vote.updateOne({ _id: voteId }, { $push: { participants: userId } });
 
                 // get information about participants and quota to update status if they are equals.
                 const participantLength = await Vote.findOne({ _id: voteId });
                 const nbParticipant     = participantLength.participants.length;
                 const nbMaxParticipant  = participantLength.quota;
-                req.flash('success', 'Vous êtes inscrit à un vote');
-
+        
                 if (nbParticipant == nbMaxParticipant) {
                     await Vote.update({ _id: voteId }, { $set: { status: 'inprogress' } });
-                    req.flash('success', 'Le vote est ouvert');
+                    req.flash('success', `Le vote est ouvert pour le sujet : ${participantLength.subject}`);
+                } else {
+                    req.flash('success', 'Vous êtes inscrit à un vote');
                 }
 
                 res.redirect('/dashboard');
@@ -114,6 +115,41 @@ exports.postEnrolledUser = async (req, res, next) =>{
                 req.flash('error', 'Vous participer déjà à ce vote');
                 res.redirect('/dashboard');
             }
+        }
+    } catch (error) {
+        const err = new Error(error);
+        err.httpStatusCode = 500;
+        return next(err);
+    }
+};
+
+/** add user choice to specific vote subject
+ * @name postEnrolledUser
+ * @function
+ * @param {string} voteId
+ * @param {string} userId
+ * @throws {JSON} - Renvoie un JSON en cas d'erreur
+ */
+exports.postUserChoice = async (req, res) => {
+    try {
+        const { userId, voteId, choice } = req.body;
+        const voted = await UsersVotes.countDocuments({ user: userId, vote: voteId, choice: null });
+
+        if (voted == 1) {
+            let choiceValue = parseInt(choice);
+            await UsersVotes.updateOne({ user: userId, vote: voteId }, { $set: { choice: choiceValue } });
+            await Vote.updateOne({ _id: voteId }, { $inc: { nbVote: 1 } });
+
+            const finishedVote  = await Vote.findOne({ _id: voteId });
+            const nbVote        = finishedVote.nbVote;
+            const quota         = finishedVote.quota;
+
+            if (nbVote == quota) {
+                await Vote.update({ _id: voteId }, { $set: { status: 'finished' } });
+            }
+
+            req.flash('success', 'Votre vote a bien été pris en compte');
+            res.redirect('/dashboard');
         }
     } catch (error) {
         const err = new Error(error);

@@ -149,7 +149,7 @@ exports.showVote = async (req, res, next) => {
     try {
         const { id } = req.params;
         const vote = await Vote.findById(id).populate({ path: 'createdBy', select: 'login -_id' }).exec();
-        const notVotedYet = await UsersVotes.count({ user: req.user._id, vote: id, choice: null });
+        const notVotedYet = await UsersVotes.countDocuments({ user: req.user._id, vote: id, choice: null });
         if (!vote) {
             req.flash('error', 'vote non trouvé');
             return res.redirect('/dashboard');
