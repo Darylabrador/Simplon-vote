@@ -14,7 +14,15 @@ const UsersVotes = require('../models/usersVotes');
  */
 exports.getDashboard = async (req, res, next) => {
     try {
-        const votes = await Vote.find().sort({ createdAt: -1 }).populate('createdBy').exec();
+        const votes = await Vote.find({ $or: [
+            { 'visibility': 'public' }, 
+            { 'participants': req.user._id }, 
+            { 'createdBy': req.user._id }
+        ]
+        }).sort({ createdAt: -1 })
+          .populate('createdBy')
+          .exec();
+
         res.render('votes/dashboard', {
             title: "Dashboard",
             path: '/dashboard',
@@ -26,7 +34,6 @@ exports.getDashboard = async (req, res, next) => {
         err.httpStatusCode = 500;
         return next(err);
     }
-
 };
 
 /**
@@ -39,11 +46,13 @@ exports.getDashboard = async (req, res, next) => {
  */
 exports.showCreated = async (req, res, next) => {
     try {
-        const votes = await Vote.find({ createdBy: req.user._id }).sort({ createdAt: -1 }).populate('createdBy').exec()
+        const votes = await Vote.find({ createdBy: req.user._id }).sort({ createdAt: -1 }).populate('createdBy').exec();
+        const host = req.protocol + '://' + req.get('host');
         res.render('votes/owner-vote', {
             title: "Mes créations",
             path: '/dashboard/created',
             votes: votes,
+            shareLinkHost: host,
             errorMessage: null
         });
     } catch (error) {
@@ -99,7 +108,17 @@ exports.showEnrolled = async (req, res, next) => {
 exports.showInprogress = async (req, res, next) => {
     try {
         const inprogress = 'inprogress';
-        const votes = await Vote.find({ status: inprogress }).sort({ createdAt: -1 }).populate('createdBy').exec()
+        const votes = await Vote.find({$and: [
+            { 'status': inprogress },
+            { $or: [
+                { 'visibility': 'public' }, 
+                { 'participants': req.user._id },
+                { 'createdBy': req.user._id }
+            ]}
+        ]}).sort({ createdAt: -1 })
+        .populate('createdBy')
+        .exec();
+
         res.render('votes/inprogress-vote', {
             title: "Votes en cours",
             path: '/dashboard/inprogress',
@@ -125,7 +144,21 @@ exports.showInprogress = async (req, res, next) => {
 exports.showFinished = async (req, res, next) => {
     try {
         const terminer = 'finished';
-        const votes = await Vote.find({ status: terminer }).sort({ createdAt: -1 }).populate('createdBy').exec();
+        const votes = await Vote.find({
+            $and: [
+                { 'status': terminer },
+                {
+                    $or: [
+                        { 'visibility': 'public' },
+                        { 'participants': req.user._id },
+                        { 'createdBy': req.user._id }
+                    ]
+                }
+            ]
+        }).sort({ createdAt: -1 })
+            .populate('createdBy')
+            .exec();
+
         res.render('votes/finished-vote', {
             title: "Votes finis",
             path: '/dashboard/finished',

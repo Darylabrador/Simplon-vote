@@ -24,8 +24,10 @@
                         </p>
                         <div class="d-flex flex-column align-items-center w-100">
                             <p class="text-right"> <%= vote.participants.length %> / <%= vote.quota %> Participants </p>
-                            <% if (vote.status == 'inprogress') { %>
-                            <a class="text-center btn btn-outline-secondary w-25 mb-3" href="/dashboard/vote/<%= vote._id %>"> Voter </a>
+                            <% if (vote.createdBy._id != currentUserId ) { %>
+                                <% if (vote.status == 'inprogress') { %>
+                                <a class="text-center btn btn-outline-secondary w-25 mb-3" href="/dashboard/vote/<%= vote._id %>"> Voter </a>
+                                <% } %>
                             <% } %>
                         </div>
                         <div class="progress">

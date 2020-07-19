@@ -66,7 +66,6 @@ exports.addVote = async (req, res) => {
  */
 exports.postEnrolledUser = async (req, res, next) =>{
     const { voteId, userId } = req.body;
-
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -96,7 +95,7 @@ exports.postEnrolledUser = async (req, res, next) =>{
                 });
 
                 await userVote.save();
-                const vote = await Vote.updateOne({ _id: voteId }, { $push: { participants: userId } });
+                await Vote.updateOne({ _id: voteId }, { $push: { participants: userId } });
 
                 // get information about participants and quota to update status if they are equals.
                 const participantLength = await Vote.findOne({ _id: voteId });
@@ -105,7 +104,7 @@ exports.postEnrolledUser = async (req, res, next) =>{
         
                 if (nbParticipant == nbMaxParticipant) {
                     await Vote.update({ _id: voteId }, { $set: { status: 'inprogress' } });
-                    req.flash('success', `Le vote est ouvert pour le sujet : ${participantLength.subject}`);
+                    req.flash('success', `Le vote est ouvert : ${participantLength.subject}`);
                 } else {
                     req.flash('success', 'Vous êtes inscrit à un vote');
                 }
@@ -156,4 +155,70 @@ exports.postUserChoice = async (req, res) => {
         err.httpStatusCode = 500;
         return next(err);
     }
-}
+};
+
+
+/** Enrolled user to specific vote subject which is private
+ * @name postEnrolledPrivateVote
+ * @function
+ * @param {string} shareVoteId
+ * @throws {JSON} - Renvoie un JSON en cas d'erreur
+ */
+exports.postEnrolledPrivateVote = async (req, res, next) => {
+    const shareVoteId = req.params.shareVoteId;
+    const userId      = req.user._id;
+    const errors      = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        req.flash('error', errors.array()[0].msg);
+        return res.redirect('/dashboard');
+    }
+
+    try {
+        // get informations about nbTotalParticipant and nbTotalMaxParticipant (block request if this 2 values are equal)
+        const nbTotal               = await Vote.findOne({ _id: shareVoteId });
+        const nbTotalParticipant    = nbTotal.participants.length;
+        const nbTotalMaxParticipant = nbTotal.quota;
+        const creator               = nbTotal.createdBy;
+
+        if (creator == userId) {
+            req.flash('error', 'Vous ne pouvez pas participer à votre propre sujet de vote');
+            return res.redirect('/dashboard');
+        }
+
+        if (nbTotalParticipant != nbTotalMaxParticipant) {
+            const userVoteExist = await UsersVotes.findOne({ user: userId, vote: shareVoteId });
+
+            if (!userVoteExist) {
+                const userVote = await new UsersVotes({
+                    user: userId,
+                    vote: shareVoteId
+                });
+
+                await userVote.save();
+                await Vote.updateOne({ _id: shareVoteId }, { $push: { participants: userId } });
+
+                // get information about participants and quota to update status if they are equals.
+                const participantLength = await Vote.findOne({ _id: shareVoteId });
+                const nbParticipant = participantLength.participants.length;
+                const nbMaxParticipant = participantLength.quota;
+
+                if (nbParticipant == nbMaxParticipant) {
+                    await Vote.update({ _id: shareVoteId }, { $set: { status: 'inprogress' } });
+                    req.flash('success', `Le vote est ouvert : ${participantLength.subject}`);
+                } else {
+                    req.flash('success', 'Vous êtes inscrit à un vote');
+                }
+
+                res.redirect('/dashboard');
+            } else {
+                req.flash('error', 'Vous participer déjà à ce vote');
+                res.redirect('/dashboard');
+            }
+        }
+    } catch (error) {
+        const err = new Error(error);
+        err.httpStatusCode = 500;
+        return next(err);
+    }
+};

@@ -34,6 +34,14 @@
                                                 <% } %>
                                             </small>
                                         </p>
+
+                                        <% if (vote.visibility == 'private') { %>
+                                        <p class="text-center">
+                                            Lien de partage : <br>
+                                            <%= shareLinkHost %>/dashboard/share/<%= vote._id %>
+                                        </p>
+                                        <% } %>
+                
                                         <div class="d-flex w-100 justify-content-end">
                                             <% if (vote.status == 'finished') { %>
                                             <a href="/dashboard/result/<%= vote._id %>">Voir le résultat</a>

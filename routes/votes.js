@@ -170,4 +170,15 @@ router.post(
     ],
     adminController.postUserChoice
 );
+
+/**
+ * Enrolled user to private vote
+ * @name postEnrolledPrivateVote GET
+ * @function
+ * @memberof module:routers/votes
+ * @param {string} '/dashboard/share/:shareVoteId' - uri
+ * @param {function} adminController.postEnrolledPrivateVote
+ */
+router.get('/share/:shareVoteId', isAuth, adminController.postEnrolledPrivateVote);
+
 module.exports = router;
