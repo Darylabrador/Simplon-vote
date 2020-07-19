@@ -70,8 +70,8 @@ app.use((req, res, next) =>{
         return next();
       }
       req.user = user;
-      res.locals.currentUser   = user.login;
-      res.locals.currentUserId = user._id;
+      res.locals.currentUser   = user.login.toString();
+      res.locals.currentUserId = user._id.toString();
       next();
     })
     .catch(err => {
@@ -98,6 +98,7 @@ app.use(errorController.get404);
 
 // general error handler (all except 404)
 app.use((error, req, res, next) => {
+  console.log(error)
   res.status(error.httpStatusCode).render('error', {
     title: 'Une erreur est servenue',
     path: '/errors',

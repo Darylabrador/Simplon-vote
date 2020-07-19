@@ -4,6 +4,7 @@
 <body>
     <% include ../includes/navigation %>
     <main>
+        <% include ../includes/messageFlash %>
         <% if(votes.length == 0) { %>
         <div class="d-flex justify-content-center w-100">
             <h5 class="alert alert-info my-5"> Désolé, il n'y a pas de sujet de vote en cours !</h5>
@@ -23,10 +24,9 @@
                             </small>
                         </p>
                         <div class="d-flex flex-column align-items-center w-100">
-                            <p class="text-right"> <%= vote.participants.length %> / <%= vote.quota %>
-                                Participants </p>
+                            <p class="text-right"> <%= vote.participants.length %> / <%= vote.quota %> Participants </p>
                             <% if (vote.status == 'inprogress') { %>
-                            <a class="text-center btn btn-outline-secondary w-25 mb-3" href="#"> Voter </a>
+                            <a class="text-center btn btn-outline-secondary w-25 mb-3" href="/dashboard/vote/<%= vote._id %>"> Voter </a>
                             <% } %>
                         </div>
                         <div class="progress">

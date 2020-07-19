@@ -78,7 +78,7 @@ router.get('/result/:id', isAuth, votesController.showResult);
 router.get('/vote/:id', isAuth, votesController.showVote);
 
 /**
- * Return view with information about specific vote
+ * Handling post information about creating a subject vote
  * @name addVote POST
  * @function
  * @memberof module:routers/votes
@@ -117,7 +117,30 @@ router.post(
             }),
     ],
     adminController.addVote
-    );
+);
 
+/**
+ * Handling the post request when user enrolled to subject vote
+ * @name postEnrolledUser POST
+ * @function
+ * @memberof module:routers/votes
+ * @param {string} '/dashboard/vote/enrolled/' - uri
+ * @param {function} adminController.postEnrolledUser
+ */
+router.post(
+    '/vote/enrolled', 
+    isAuth, 
+    [
+        body('voteId', 'Nous ne pouvons pas prendre en compte votre participation')
+            .trim()
+            .not()
+            .isEmpty(),
+        body('userId', 'Nous ne pouvons pas prendre en compte votre participation')
+            .trim()
+            .not()
+            .isEmpty(),
+    ],
+    adminController.postEnrolledUser
+);
 
 module.exports = router;

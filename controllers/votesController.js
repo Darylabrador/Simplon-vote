@@ -15,11 +15,11 @@ const UsersVotes = require('../models/usersVotes');
 exports.getDashboard = async (req, res, next) => {
     try {
         const votes = await Vote.find().populate('createdBy').exec();
-        console.log(votes)
         res.render('votes/dashboard', {
             title: "Dashboard",
             path: '/dashboard',
-            votes: votes
+            votes: votes,
+            errorMessage: null
         }); 
     } catch (error) {
         const err = new Error(error);
@@ -43,7 +43,8 @@ exports.showCreated = async (req, res, next) => {
         res.render('votes/owner-vote', {
             title: "Mes créations",
             path: '/dashboard/created',
-            votes: votes
+            votes: votes,
+            errorMessage: null
         });
     } catch (error) {
         const err = new Error(error);
@@ -72,7 +73,8 @@ exports.showEnrolled = async (req, res, next) => {
         res.render('votes/enrolled-vote', {
             title: "Mes participations",
             path: '/dashboard/enrolled',
-            votes: votes
+            votes: votes,
+            errorMessage: null
         });
     } catch (error) {
         const err = new Error(error);
@@ -98,7 +100,8 @@ exports.showInprogress = async (req, res, next) => {
         res.render('votes/inprogress-vote', {
             title: "Votes en cours",
             path: '/dashboard/inprogress',
-            votes: votes
+            votes: votes,
+            errorMessage: null
         });
     } catch (error) {
         const err = new Error(error);
@@ -123,7 +126,8 @@ exports.showFinished = async (req, res, next) => {
         res.render('votes/finished-vote', {
             title: "Votes finis",
             path: '/dashboard/finished',
-            votes: votes
+            votes: votes,
+            errorMessage: null
         });
     } catch (error) {
         const err = new Error(error);
@@ -154,7 +158,8 @@ exports.showVote = async (req, res, next) => {
             title: "Détails",
             path: '/dashboard/details',
             vote: vote,
-            alreadyVoted: notVotedYet
+            alreadyVoted: notVotedYet,
+            errorMessage: null
         }); 
     } catch (error) {
         const err = new Error(error);
@@ -224,6 +229,7 @@ exports.showResult = async (req, res, next) => {
             subject: subject,
             resultat: result,
             totaloptions: totalOptions,
+            errorMessage: null
         });
     } catch (error) {
         const err = new Error(error);

@@ -4,6 +4,7 @@
 <body>
     <% include ../includes/navigation %>
     <main>
+        <% include ../includes/messageFlash %>
         <% if(votes.length == 0) { %>
         <div class="d-flex justify-content-center w-100">
             <h5 class="alert alert-info my-5"> Vous n'avez pas encore participer à un sujet de vote !</h5>

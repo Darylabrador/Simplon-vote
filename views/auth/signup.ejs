@@ -3,14 +3,9 @@
     <body>
         <% include ../includes/navigation %>
         <main>
-            <% if (errorMessage) { %>
-            <div class="alert alert-danger alert-dismissible fade show mt-0" role="alert">
-                <strong><%= errorMessage %></strong>.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <% } %>
+            
+            <% include ../includes/messageFlash %>
+
             <div class="jumbotron">
                 <form action="/signup" class="form" method="POST">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">

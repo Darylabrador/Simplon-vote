@@ -31,15 +31,23 @@
                         href="/dashboard/finished">Terminées</a>
                 </li>
             </ul>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><%= locals.currentUser %></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Deconnexion</a>
-                </li>
-            </ul>
             <% } %>
+
+            <ul class="navbar-nav ml-auto">
+                <% if( locals.isAuthenticated ) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><%= locals.currentUser %></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Deconnexion</a>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/signup">Inscription</a>
+                    </li>
+                <% } %>
+            </ul>
+
         </div>
     </nav>
 </header>
