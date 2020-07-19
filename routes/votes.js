@@ -124,7 +124,7 @@ router.post(
  * @name postEnrolledUser POST
  * @function
  * @memberof module:routers/votes
- * @param {string} '/dashboard/vote/enrolled/' - uri
+ * @param {string} '/dashboard/vote/enrolled' - uri
  * @param {function} adminController.postEnrolledUser
  */
 router.post(
@@ -143,4 +143,31 @@ router.post(
     adminController.postEnrolledUser
 );
 
+/**
+ * Handling the post request when user choose an option to subject vote
+ * @name postUserChoice POST
+ * @function
+ * @memberof module:routers/votes
+ * @param {string} '/dashboard/vote/choice' - uri
+ * @param {function} adminController.postUserChoice
+ */
+router.post(
+    '/vote/choice', 
+    isAuth,
+    [
+        body('voteId', 'Nous ne pouvons pas prendre en compte votre vote')
+            .trim()
+            .not()
+            .isEmpty(),
+        body('userId', 'Nous ne pouvons pas prendre en compte votre vote')
+            .trim()
+            .not()
+            .isEmpty(),
+        body('choice', 'Vous devez choisir une réponse')
+            .trim()
+            .not()
+            .isEmpty()
+    ],
+    adminController.postUserChoice
+);
 module.exports = router;
