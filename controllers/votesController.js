@@ -14,7 +14,7 @@ const UsersVotes = require('../models/usersVotes');
  */
 exports.getDashboard = async (req, res, next) => {
     try {
-        const votes = await Vote.find().populate('createdBy').exec();
+        const votes = await Vote.find().sort({ createdAt: -1 }).populate('createdBy').exec();
         res.render('votes/dashboard', {
             title: "Dashboard",
             path: '/dashboard',
@@ -39,7 +39,7 @@ exports.getDashboard = async (req, res, next) => {
  */
 exports.showCreated = async (req, res, next) => {
     try {
-        const votes = await Vote.find({ createdBy: req.user._id }).populate('createdBy').exec()
+        const votes = await Vote.find({ createdBy: req.user._id }).sort({ createdAt: -1 }).populate('createdBy').exec()
         res.render('votes/owner-vote', {
             title: "Mes créations",
             path: '/dashboard/created',
@@ -65,6 +65,9 @@ exports.showEnrolled = async (req, res, next) => {
     try {
         const votes = await UsersVotes.find({ user: req.user._id }).populate({
             path: 'vote',
+            options: {
+                sort : { createdAt: -1 }
+            },
             populate: {
                 path: 'createdBy',
                 model: 'user'
@@ -96,7 +99,7 @@ exports.showEnrolled = async (req, res, next) => {
 exports.showInprogress = async (req, res, next) => {
     try {
         const inprogress = 'inprogress';
-        const votes = await Vote.find({ status: inprogress }).populate('createdBy').exec()
+        const votes = await Vote.find({ status: inprogress }).sort({ createdAt: -1 }).populate('createdBy').exec()
         res.render('votes/inprogress-vote', {
             title: "Votes en cours",
             path: '/dashboard/inprogress',
@@ -122,7 +125,7 @@ exports.showInprogress = async (req, res, next) => {
 exports.showFinished = async (req, res, next) => {
     try {
         const terminer = 'finished';
-        const votes = await Vote.find({ status: terminer }).populate('createdBy').exec();
+        const votes = await Vote.find({ status: terminer }).sort({ createdAt: -1 }).populate('createdBy').exec();
         res.render('votes/finished-vote', {
             title: "Votes finis",
             path: '/dashboard/finished',

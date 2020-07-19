@@ -35,6 +35,6 @@ const voteSchema = mongoose.Schema({
         enum: ['created', 'inprogress', 'finished'],
         default: "created"
     }
-})
+},{ timestamps: true })
 
 module.exports = mongoose.model('vote', voteSchema)

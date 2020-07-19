@@ -17,8 +17,9 @@
                                         <p class="text-center">
                                             <b><%= vote.subject %></b> <br>
                                             <small>
-                                                Créer par <% if (vote.createdBy != null) { %>
-                                                <%= vote.createdBy.login %> <br> Status : <%= vote.status %>
+                                                Créer par 
+                                                <% if (vote.createdBy != null) { %>
+                                                <%= vote.createdBy.login %>
                                                 <% } %>
                                             </small>
                                         </p>

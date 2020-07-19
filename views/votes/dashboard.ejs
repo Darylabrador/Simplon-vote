@@ -22,9 +22,22 @@
                                     <div class="card-body">
                                         <p class="text-center">
                                             <b><%= vote.subject %></b> <br>
-                                            <small>créer par
+                                            <small>
+                                                Créer par
                                                 <% if (vote.createdBy != null) { %>
-                                                <%= vote.createdBy.login %> <br> Statut : <%= vote.status %>
+                                                <%= vote.createdBy.login %> <br> 
+                                                Statut :
+                                                    <% switch(vote.status) { 
+                                                        case 'created': %>
+                                                        En attente de participant
+                                                        <% break;
+                                                        case 'inprogress': %>
+                                                        En cours
+                                                        <% break;
+                                                        case 'finished': %>
+                                                        Fini
+                                                        <% break;
+                                                    } %>
                                                 <% } %>
                                             </small>
                                         </p>
@@ -57,15 +70,39 @@
                                                 <b><%= vote.subject %></b>
                                                 <br>
                                                 <small>
-                                                    Statut : <%= vote.status %>
+                                                Statut :
+                                                    <% switch(vote.status) { 
+                                                        case 'created': %>
+                                                        En attente de participant
+                                                        <% break;
+                                                        case 'inprogress': %>
+                                                        En cours
+                                                        <% break;
+                                                        case 'finished': %>
+                                                        Fini
+                                                        <% break;
+                                                    } %>
                                                 </small>
                                             </p>
                                         <% } else { %>
                                             <p class="text-center">
                                                 <b><%= vote.subject %></b><br>
-                                                <small>créer par
+                                                <small>
+                                                    Créer par
                                                     <% if (vote.createdBy != null) { %>
-                                                    <%= vote.createdBy.login %> <br> Statut : <%= vote.status %>
+                                                    <%= vote.createdBy.login %> <br> 
+                                                    Statut :
+                                                        <% switch(vote.status) { 
+                                                            case 'created': %>
+                                                            En attente de participant
+                                                            <% break;
+                                                            case 'inprogress': %>
+                                                            En cours
+                                                            <% break;
+                                                            case 'finished': %>
+                                                            Fini
+                                                            <% break;
+                                                        } %>
                                                     <% } %>
                                                 </small>
                                             </p>

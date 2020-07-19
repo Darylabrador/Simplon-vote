@@ -16,10 +16,10 @@
                 <div class="card">
                     <div class="card-body">
                         <p class="text-center"><b><%= items.vote.subject %></b> <br>
-                            <small>créer par
+                            <small>
+                                Créer par
                                 <% if (items.vote.createdBy != null) { %>
-                                <%= items.vote.createdBy.login %><br>
-                                Statut : <%= items.vote.status %>
+                                <%= items.vote.createdBy.login %>
                                 <% } %>
                             </small>
                         </p>
