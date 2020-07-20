@@ -17,7 +17,8 @@ exports.getLogin = (req, res, next) =>{
         path: '',
         errorMessage: null,
         hasError: false,
-        validationErrors: []
+        validationErrors: [],
+        page: 'login'
     });
 };
 
@@ -35,7 +36,8 @@ exports.getSignup = (req, res, next) => {
         path: '',
         errorMessage: null,
         hasError: false,
-        validationErrors: []
+        validationErrors: [],
+        page: 'signup'
     });
 };
 
@@ -60,7 +62,8 @@ exports.postLogin = async (req, res, next) =>{
                 email: email,
                 password: password
             },
-            validationErrors: errors.array()
+            validationErrors: errors.array(),
+            page: 'login'
         });
     }
 
@@ -114,7 +117,8 @@ exports.postSignup = async (req, res, next) =>{
                 password: password,
                 passwordConfirm: passwordConfirm
             },
-            validationErrors: errors.array()
+            validationErrors: errors.array(),
+            page: 'signup'
         });
     }
 
@@ -142,7 +146,8 @@ exports.postSignup = async (req, res, next) =>{
                 password: password,
                 passwordConfirm: passwordConfirm
             },
-            validationErrors: []
+            validationErrors: [],
+            page: 'signup'
         });
     }
 };

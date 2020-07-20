@@ -3,11 +3,17 @@
 
 <body>
     <% include ../includes/navigation %>
-    <main>
 
-        <% include ../includes/messageFlash %>
-        <div class="jumbotron">
+    <main>
+        <div class="logSignForm px-5">
+           
+            
+            <h3 class="text-center py-4"> Connexion </h3>
+
             <form action="/login" class="form" method="POST">
+
+                <% include ../includes/messageFlash %>
+                
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div class="form-group">
                     <label>Adresse email</label>
@@ -21,13 +27,15 @@
                         class="form-control <%= validationErrors.find(e => e.param === 'password') ? 'border border-danger' : '' %>"
                         required value="<% if(hasError){%><%=oldInput.password%> <% } %>">
                 </div>
-                <div class="col-sm-12 text-center mt-5">
-                    <button type="submit" class="btn btn-primary"> se connecter </button>
+                <div class="col-sm-12 text-center pb-4 mt-5">
+                    <button type="submit" class="btn btn-primary logSignBtn"> Se connecter </button>
                 </div>
             </form>
         </div>
     </main>
+
     <% include ../includes/footer %>
+
 </body>
 
 </html>

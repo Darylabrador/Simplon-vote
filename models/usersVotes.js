@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+
 var ObjectId = mongoose.Types.ObjectId;
 
 const userVoteSchema = mongoose.Schema({
@@ -16,6 +17,6 @@ const userVoteSchema = mongoose.Schema({
         type: Number,
         default: null
     },
-},{ collection: 'usersVotes' })
+},{ collection: 'usersVotes' });
 
-module.exports = mongoose.model('userVote', userVoteSchema)
+module.exports = mongoose.model('userVote', userVoteSchema);

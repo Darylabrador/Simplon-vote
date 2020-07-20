@@ -1,34 +1,20 @@
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="<%= isAuthenticated ? '/dashboard' : '/' %>">SimplonVOT</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light py-1 px-4">
+
+        <a class="navbar-brand" href="<%= isAuthenticated ? '/dashboard' : '/' %>">
+            <img id="logo" class="img-fluid" src="/images/simplonvot-logo.png" alt="logo simplonvot">
+        </a>
+
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
             <% if( isAuthenticated ) { %>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="/creer-un-sujet" data-toggle="modal" data-target="#exampleModal">Créer un sujet</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <%= path === '/dashboard' ? 'bg-dark text-white' : '' %>" href="/dashboard">Tous</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <%= path === '/dashboard/created' ? 'bg-dark text-white' : '' %>"
-                        href="/dashboard/created">Mes créations</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <%= path === '/dashboard/enrolled' ? 'bg-dark text-white' : '' %>"
-                        href="/dashboard/enrolled">Participations</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <%= path === '/dashboard/inprogress' ? 'bg-dark text-white' : '' %>"
-                        href="/dashboard/inprogress">En cours</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <%= path === '/dashboard/finished' ? 'bg-dark text-white' : '' %>"
-                        href="/dashboard/finished">Terminées</a>
+                    <a class="nav-link btn px-3" href="/creer-un-sujet" data-toggle="modal" data-target="#exampleModal">Créer un sujet</a>
                 </li>
             </ul>
             <% } %>
@@ -36,15 +22,35 @@
             <ul class="navbar-nav ml-auto">
                 <% if( isAuthenticated ) { %>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><%= currentUser %></a>
+                        <a class="nav-link <%= path === '/dashboard' ? 'activeLink' : '' %>" href="/dashboard">Tous</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/logout">Deconnexion</a>
+                        <a class="nav-link <%= path === '/dashboard/created' ? 'activeLink' : '' %>" href="/dashboard/created">Mes créations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= path === '/dashboard/enrolled' ? 'activeLink' : '' %>" href="/dashboard/enrolled">Participations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= path === '/dashboard/inprogress' ? 'activeLink' : '' %>" href="/dashboard/inprogress">En cours</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= path === '/dashboard/finished' ? 'activeLink' : '' %>" href="/dashboard/finished">Terminées</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn px-3" href="/logout">Deconnexion</a>
                     </li>
                 <% } else { %>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signup">Inscription</a>
-                    </li>
+
+                    <% if (page == 'login') { %>
+                        <li class="nav-item">
+                            <a class="nav-link btn px-3" href="/signup">Inscription</a>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link btn px-3" href="/login">Se connecter</a>
+                        </li>
+                    <% } %>
+                    
                 <% } %>
             </ul>
 

@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+
 var ObjectId = mongoose.Types.ObjectId;
 
 const voteSchema = mongoose.Schema({
