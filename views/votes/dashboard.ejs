@@ -3,9 +3,8 @@
     <body>
         <% include ../includes/navigation %>
         <main class="container-fluid">
+        <% include ../includes/messageFlash %>
             <div class="row no-gutters justify-content-center align-items-center py-5">
-                <% include ../includes/messageFlash %>
-
                 <% if(votes.length == 0) { %>
             
                 <div class="d-flex justify-content-center w-100">
@@ -27,35 +26,38 @@
                                                 Créer par
                                                 <% if (vote.createdBy != null) { %>
                                                 <%= vote.createdBy.login %> <br> 
-                                                Statut :
                                                     <% switch(vote.status) { 
                                                         case 'created': %>
-                                                        En attente de participant
+                                                        <span class="waiting"> En attente de participant </span>
                                                         <% break;
                                                         case 'inprogress': %>
-                                                        En cours
+                                                        <span class="inprogress"> En cours </span> 
                                                         <% break;
                                                         case 'finished': %>
-                                                        Fini
+                                                        <span class="finished"> Fini </span>
                                                         <% break;
                                                     } %>
                                                 <% } %>
                                             </small>
                                         </p>
-
+                                    </div>
+                                    <div class="card-footer">
                                         <% if (vote.status == 'inprogress') { %>
-                                        <a class="text-center btn btn-outline-secondary w-25 mb-3" href="/dashboard/vote/<%= vote._id %>"> Voter </a>
+                                            <div class="d-flex justify-content-center">
+                                                <a class="text-center btn w-75 py-0" href="/dashboard/vote/<%= vote._id %>" style="background: rgba(27, 159, 233, 0.6);"> Voter </a>
+                                            </div>
                                         <% } else if (vote.status == 'finished') { %>
-                                        <a href="/dashboard/result/<%= vote._id %>">Voir le résultat</a>
-                                        <% } else { %>                       
-                                        <p class="text-right"> <%= vote.participants.length %> / <%= vote.quota %> Participants </p>
-                                        <% } %>
-
+                                            <div class="d-flex justify-content-center">
+                                                <a href="/dashboard/result/<%= vote._id %>" class="btn w-75 py-0" style="background: rgba(0, 197, 31, 0.6);">Voir le résultat</a>
+                                            </div>
+                                        <% } else { %> 
                                         <div class="progress">
                                             <% var vot = vote.participants.length/vote.quota*100 %>
-                                            <div class="progress-bar bg-warning" role="progressbar" style="width: <%= vot %>%;"
-                                                aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%= Math.round(vot) %>%</div>
+                                            <div class="progress-bar" role="progressbar" style="width: <%= vot %>%; background: rgba(160, 115, 0, 0.6);" aria-valuenow="<%= vot %>"
+                                                aria-valuemin="0" aria-valuemax="100"> <%= vote.participants.length %> / <%= vote.quota %> Participants 
+                                            </div>
                                         </div>
+                                        <% } %>
                                     </div>
                                 </div>
                             </div>
@@ -71,16 +73,16 @@
                                                 <b><%= vote.subject %></b>
                                                 <br>
                                                 <small>
-                                                Statut :
+                                                    Créer par moi <br>
                                                     <% switch(vote.status) { 
                                                         case 'created': %>
-                                                        En attente de participant
+                                                        <span class="waiting"> En attente de participant </span>
                                                         <% break;
                                                         case 'inprogress': %>
-                                                        En cours
+                                                        <span class="inprogress"> En cours </span> 
                                                         <% break;
                                                         case 'finished': %>
-                                                        Fini
+                                                        <span class="finished"> Fini </span>
                                                         <% break;
                                                     } %>
                                                 </small>
@@ -92,49 +94,57 @@
                                                     Créer par
                                                     <% if (vote.createdBy != null) { %>
                                                     <%= vote.createdBy.login %> <br> 
-                                                    Statut :
                                                         <% switch(vote.status) { 
                                                             case 'created': %>
-                                                            En attente de participant
+                                                            <span class="waiting"> En attente de participant </span>
                                                             <% break;
                                                             case 'inprogress': %>
-                                                            En cours
+                                                            <span class="inprogress"> En cours </span> 
                                                             <% break;
                                                             case 'finished': %>
-                                                            Fini
+                                                            <span class="finished"> Fini </span>
                                                             <% break;
                                                         } %>
                                                     <% } %>
                                                 </small>
                                             </p>
                                         <% } %>
-
+                                    </div>
+                                    <div class="card-footer">
                                         <% if (vote.createdBy._id != currentUserId) { %>
-                                        <div class="d-flex justify-content-end">
-                                            <p> <%= vote.participants.length %> / <%= vote.quota %> Participants </p>
+                                        <div>
                                             <form class="mx-3" action="/dashboard/vote/enrolled" method="POST">
                                                 <input type="hidden" name="voteId" value="<%= vote._id %>">
                                                 <input type="hidden" name="userId" value="<%= currentUserId %>">
                                                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                                <button type="submit" class="rounded p-0 m-0 btn-primary">▶️</button>
+                                                <button type="submit" class="rounded btn py-0 btn-lg w-100" style="background: rgba(160, 115, 0, 0.6);"> Participer </button>
                                             </form>
                                         </div>
                                         <% } else if (vote.status == 'finished') { %>
-                                        <a href="/dashboard/result/<%= vote._id %>">Voir le résultat</a>
+                                            <div class="d-flex justify-content-center">
+                                                <a href="/dashboard/result/<%= vote._id %>" class="btn w-75 py-0" style="background: rgba(0, 197, 31, 0.6);">Voir le résultat</a>
+                                            </div>
+                                        <% } else if (vote.status == 'inprogress') { %>
+                                            <div class="progress">
+                                                <% var vot = vote.participants.length/vote.quota*100 %>
+                                                <div class="progress-bar" role="progressbar" style="width: <%= vot %>%; background: rgba(27, 159, 233, 0.6);"
+                                                    aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%= vote.participants.length %> /
+                                                    <%= vote.quota %> Participants
+                                                </div>
+                                            </div>
                                         <% } else { %>
-                                        <p class="text-right"> <%= vote.participants.length %> / <%= vote.quota %> Participants </p>
+                                            <div class="progress">
+                                                <% var vot = vote.participants.length/vote.quota*100 %>
+                                                <div class="progress-bar" role="progressbar" style="width: <%= vot %>%; background: rgba(160, 115, 0, 0.6);"
+                                                    aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%= vote.participants.length %> /
+                                                    <%= vote.quota %> Participants
+                                                </div>
+                                            </div>
                                         <% } %>
-                                
-                                        <div class="progress">
-                                            <% var vot = vote.participants.length/vote.quota*100 %>
-                                            <div class="progress-bar bg-warning" role="progressbar" style="width: <%= vot %>%;"
-                                                aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%= Math.round(vot) %>%</div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         <% } %>
-
                     <% }); %>
                 <% } %>  
             </div>

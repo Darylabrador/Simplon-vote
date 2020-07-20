@@ -53,6 +53,18 @@ a.nav-link.btn:hover{
     border: 1px solid black !important;
 }
 
+.waiting{
+    color: #A07300;
+}
+
+.inprogress{
+    color: #1B9FE9;
+}
+
+.finished{
+  color: #0D9423;
+}
+
 footer .footer{
     background-color: #F8F9FA !important;
 }
