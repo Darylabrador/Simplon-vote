@@ -2,9 +2,10 @@
     </head>
     <body>
         <% include ../includes/navigation %>
-        <main>
-            <% include ../includes/messageFlash %>
-            <div class="row no-gutters">
+        <main class="container-fluid">
+            <div class="row no-gutters justify-content-center align-items-center py-5">
+                <% include ../includes/messageFlash %>
+
                 <% if(votes.length == 0) { %>
             
                 <div class="d-flex justify-content-center w-100">
@@ -16,8 +17,8 @@
                     <% votes.forEach(function(vote) { %>
 
                         <% if(vote.participants.includes(locals.currentUserId)) { %>
-
-                            <div class="col-md-12">
+                            
+                            <div class="col-12 col-md-5 col-lg-3 m-3">
                                 <div class="card">
                                     <div class="card-body">
                                         <p class="text-center">
@@ -61,7 +62,7 @@
 
                         <% } else { %>
 
-                            <div class="col-md-12">
+                            <div class="col-12 col-md-5 col-lg-3 m-3">
                                 <div class="card">
                                     <div class="card-body">
                                         
@@ -138,8 +139,32 @@
                 <% } %>  
             </div>
         </main>
+
+        <div class="d-flex justify-content-center my-3">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
         <% include ../includes/footer %>
         <% include ../includes/modals %>
+        
         <script src="/js/script.js"></script>
     </body>
 </html>

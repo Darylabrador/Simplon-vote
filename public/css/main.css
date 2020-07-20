@@ -53,14 +53,42 @@ a.nav-link.btn:hover{
     border: 1px solid black !important;
 }
 
-footer{
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-}
-
 footer .footer{
     background-color: #F8F9FA !important;
 }
 
+@media (max-width: 575.98px) { 
+    main {
+        min-height: calc(33px + 73vh);
+    }
+}
+
+@media (max-width: 767.98px) { 
+    main {
+        min-height: calc(33px + 73vh);
+    }
+}
+
+@media (max-width: 991.98px) { 
+        main {
+        min-height: calc(33px + 73vh);
+    }
+}
+
+@media (max-width: 1199.98px) { 
+    main {
+        min-height: calc(33px + 73vh);
+    }
+}
+
+@media (min-width: 1200px) AND (max-width: 1799px){ 
+    main {
+        min-height: calc(28px + 66vh);
+    }
+}
+
+@media (min-width: 1800px) {
+    main {
+        min-height: calc(33px + 73vh);
+    }
+}
