@@ -29,7 +29,6 @@ exports.addVote = async (req, res) => {
             message: errors.array()[0].msg
         });
     }
-    
     try {
         const vote = new Vote({
             subject,
@@ -41,9 +40,7 @@ exports.addVote = async (req, res) => {
             visibility,
             status: 'created'
         });
-
         await vote.save();
-
         res.status(201).json({
             success: true,
             message: "Votre sujet de vote a bien été ajouté !"

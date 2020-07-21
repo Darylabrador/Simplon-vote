@@ -3,7 +3,7 @@
 
 <body>
     <% include ../includes/navigation %>
-    <main>
+    <main class="container-fluid">
         <% include ../includes/messageFlash %>
         <% if(votes.length == 0) { %>
         <div class="d-flex justify-content-center w-100">
@@ -12,7 +12,6 @@
         <% } else { %>
 
         <div class="row no-gutters justify-content-center align-items-center py-5">
-
             <% votes.forEach(function(items) { %>
             <div class="col-12 col-md-5 col-lg-3 m-3">
                 <div class="card">
@@ -46,11 +45,21 @@
                     </div>
                     <% } %>
                 </div>
-               
+               </div>
             </div>
             <% }); %>
         <% } %>
     </main>
+
+    <% include ../includes/pagination , {
+                currentPage: currentPage, 
+                nextPage: nextPage, 
+                previousPage: previousPage, 
+                lastPage: lastPage, 
+                hasNextPage: hasNextPage,
+                hasPreviousPage: hasPreviousPage
+            }) %>
+
     <% include ../includes/footer %>
     <% include ../includes/modals %>
     <script src="/js/script.js"></script>

@@ -119,6 +119,20 @@ footer .footer{
     background-color: #F8F9FA !important;
 }
 
+li.page-item .page-link,  li.page-item:active{
+    color: white !important;
+    background: rgba(0, 0, 0, 0.45) !important;
+    border: 1px solid rgba(0, 0, 0, 0.25) !important;
+    border-radius: 5px;
+}
+
+li.page-item.active .page-link{
+    color: white !important;
+    background: rgba(0, 0, 0, 0.65) !important;
+    border: 1px solid rgba(0, 0, 0, 0.25) !important;
+    border-radius: 5px;
+}
+
 @media (max-width: 575.98px) { 
     main {
         min-height: calc(33px + 73vh);

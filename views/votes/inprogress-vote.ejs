@@ -3,7 +3,7 @@
 
 <body>
     <% include ../includes/navigation %>
-    <main>
+    <main class="container-fluid">
         <% include ../includes/messageFlash %>
         <% if(votes.length == 0) { %>
         <div class="d-flex justify-content-center w-100">
@@ -56,6 +56,16 @@
         <% } %>
         </div>
     </main>
+
+    <% include ../includes/pagination , {
+                    currentPage: currentPage, 
+                    nextPage: nextPage, 
+                    previousPage: previousPage, 
+                    lastPage: lastPage, 
+                    hasNextPage: hasNextPage,
+                    hasPreviousPage: hasPreviousPage
+                }) %>
+
     <% include ../includes/footer %>
     <% include ../includes/modals %>
     <script src="/js/script.js"></script>

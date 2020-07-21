@@ -51,7 +51,7 @@ if(btnAddLigne != undefined){
     <div class="col-1 ml-2 text-right">
         <button type="button" class="btn btn-outline-danger btnDelete"> &times; </button>
     </div>
-    `
+    `;
         choiceContainer.appendChild(choiceLigne);
         let allChoicesLignes = document.querySelectorAll('.choiceDetails');
         let btnDeleteLigne = document.querySelectorAll(".btnDelete");
@@ -78,7 +78,6 @@ if (voteForm !== null){
         for (let j = 0; j < choices.length; j++){
             choicesValues.push(choices[j].value);
         }
-
         if (choicesValues.length < 2){
             errCompteur++;
             if (errCompteur == 1) {
@@ -93,7 +92,6 @@ if (voteForm !== null){
                     }
                 }
             }
-
             data = {
                 subject: sujetValue,
                 quota: participantValue,
@@ -101,7 +99,6 @@ if (voteForm !== null){
                 createdBy: userId,
                 visibility: visibilityValue
             }
-
             $.ajax({
                 type: "POST",
                 url: "/dashboard/vote/add",
@@ -118,11 +115,9 @@ if (voteForm !== null){
                             if (errCompteur == 1) {
                                 showSuccess(response.message);
                                 voteForm.reset();
-
                                 while (choiceContainer.lastChild) {
                                     choiceContainer.removeChild(choiceContainer.lastChild);
                                 }
-
                                 location.href = '/dashboard';
                             }
                         }else{

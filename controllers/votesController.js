@@ -4,6 +4,8 @@ const User       = require('../models/users');
 const Vote       = require('../models/votes');
 const UsersVotes = require('../models/usersVotes');
 
+const ITEM_PER_PAGE = 6;
+
 /**
  * Get getDashboard page
  * 
@@ -14,12 +16,16 @@ const UsersVotes = require('../models/usersVotes');
  */
 exports.getDashboard = async (req, res, next) => {
     try {
+        const page = +req.query.page || 1;
+        const totalItems = await Vote.find().countDocuments();
+
         const votes = await Vote.find({ $or: [
             { 'visibility': 'public' }, 
             { 'participants': req.user._id }, 
             { 'createdBy': req.user._id }
         ]
-        }).sort({ createdAt: -1 })
+        }).skip((page - 1) * ITEM_PER_PAGE)
+          .limit(ITEM_PER_PAGE).sort({ createdAt: -1 })
           .populate('createdBy')
           .exec();
 
@@ -27,7 +33,13 @@ exports.getDashboard = async (req, res, next) => {
             title: "Dashboard",
             path: '/dashboard',
             votes: votes,
-            errorMessage: null
+            errorMessage: null,
+            currentPage: page,
+            hasNextPage: ITEM_PER_PAGE * page < totalItems,
+            hasPreviousPage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1,
+            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE)
         }); 
     } catch (error) {
         const err = new Error(error);
@@ -46,14 +58,30 @@ exports.getDashboard = async (req, res, next) => {
  */
 exports.showCreated = async (req, res, next) => {
     try {
-        const votes = await Vote.find({ createdBy: req.user._id }).sort({ createdAt: -1 }).populate('createdBy').exec();
+        const page = +req.query.page || 1;
+        const totalItems = await Vote.find().countDocuments();
+
+        const votes = await Vote.find({ 
+            createdBy: req.user._id 
+        }).skip((page - 1) * ITEM_PER_PAGE)
+          .limit(ITEM_PER_PAGE)
+          .sort({ createdAt: -1 })
+          .populate('createdBy')
+          .exec();
+          
         const host = req.protocol + '://' + req.get('host');
         res.render('votes/owner-vote', {
             title: "Mes créations",
             path: '/dashboard/created',
             votes: votes,
             shareLinkHost: host,
-            errorMessage: null
+            errorMessage: null,
+            currentPage: page,
+            hasNextPage: ITEM_PER_PAGE * page < totalItems,
+            hasPreviousPage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1,
+            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE)
         });
     } catch (error) {
         const err = new Error(error);
@@ -72,7 +100,13 @@ exports.showCreated = async (req, res, next) => {
  */
 exports.showEnrolled = async (req, res, next) => {
     try {
-        const votes = await UsersVotes.find({ user: req.user._id }).populate({
+        const page = +req.query.page || 1;
+        const totalItems = await Vote.find().countDocuments();
+
+        const votes = await UsersVotes.find({ 
+            user: req.user._id 
+        }).skip((page - 1) * ITEM_PER_PAGE)
+            .limit(ITEM_PER_PAGE).populate({
             path: 'vote',
             options: {
                 sort : { createdAt: -1 }
@@ -86,7 +120,13 @@ exports.showEnrolled = async (req, res, next) => {
             title: "Mes participations",
             path: '/dashboard/enrolled',
             votes: votes,
-            errorMessage: null
+            errorMessage: null,
+            currentPage: page,
+            hasNextPage: ITEM_PER_PAGE * page < totalItems,
+            hasPreviousPage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1,
+            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE)
         });
     } catch (error) {
         const err = new Error(error);
@@ -107,6 +147,9 @@ exports.showEnrolled = async (req, res, next) => {
  */
 exports.showInprogress = async (req, res, next) => {
     try {
+        const page = +req.query.page || 1;
+        const totalItems = await Vote.find().countDocuments();
+
         const inprogress = 'inprogress';
         const votes = await Vote.find({$and: [
             { 'status': inprogress },
@@ -115,7 +158,10 @@ exports.showInprogress = async (req, res, next) => {
                 { 'participants': req.user._id },
                 { 'createdBy': req.user._id }
             ]}
-        ]}).sort({ createdAt: -1 })
+        ]
+        }).skip((page - 1) * ITEM_PER_PAGE)
+        .limit(ITEM_PER_PAGE)
+        .sort({ createdAt: -1 })
         .populate('createdBy')
         .exec();
 
@@ -123,7 +169,13 @@ exports.showInprogress = async (req, res, next) => {
             title: "Votes en cours",
             path: '/dashboard/inprogress',
             votes: votes,
-            errorMessage: null
+            errorMessage: null,
+            currentPage: page,
+            hasNextPage: ITEM_PER_PAGE * page < totalItems,
+            hasPreviousPage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1,
+            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE)
         });
     } catch (error) {
         const err = new Error(error);
@@ -143,6 +195,9 @@ exports.showInprogress = async (req, res, next) => {
  */
 exports.showFinished = async (req, res, next) => {
     try {
+        const page = +req.query.page || 1;
+        const totalItems = await Vote.find().countDocuments();
+
         const terminer = 'finished';
         const votes = await Vote.find({
             $and: [
@@ -155,7 +210,9 @@ exports.showFinished = async (req, res, next) => {
                     ]
                 }
             ]
-        }).sort({ createdAt: -1 })
+        }).skip((page - 1) * ITEM_PER_PAGE)
+            .limit(ITEM_PER_PAGE)
+            .sort({ createdAt: -1 })
             .populate('createdBy')
             .exec();
 
@@ -163,7 +220,13 @@ exports.showFinished = async (req, res, next) => {
             title: "Votes finis",
             path: '/dashboard/finished',
             votes: votes,
-            errorMessage: null
+            errorMessage: null,
+            currentPage: page,
+            hasNextPage: ITEM_PER_PAGE * page < totalItems,
+            hasPreviousPage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1,
+            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE)
         });
     } catch (error) {
         const err = new Error(error);
