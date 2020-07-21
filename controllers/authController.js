@@ -12,6 +12,9 @@ const User = require('../models/users');
  * @throws Will throw an error if one error occursed
  */
 exports.getLogin = (req, res, next) =>{
+    if (req.session.userId){
+        return res.redirect('/dashboard');
+    }
     res.render('auth/login', {
         title: "Connexion",
         path: '',
@@ -31,6 +34,9 @@ exports.getLogin = (req, res, next) =>{
  * @throws Will throw an error if one error occursed
  */
 exports.getSignup = (req, res, next) => {
+    if (req.session.userId) {
+        return res.redirect('/dashboard');
+    }
     res.render('auth/signup', {
         title: "Inscription",
         path: '',
