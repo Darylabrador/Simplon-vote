@@ -1,135 +1,107 @@
-var createError    = require('http-errors');
-var express        = require('express');
-var path           = require('path');
-var cookieParser   = require('cookie-parser');
-var logger         = require('morgan');
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+const cookieSession = require('cookie-session')
+const dotenv = require('dotenv').config()
+var validator = require('validator');
+// const dotenv = require('dotenv')
+// console.log(dotenv.config())
 
-const mongoose     = require('mongoose');
-const dotenv       = require('dotenv').config();
-const session      = require('express-session');
-const MongoDBStore = require('connect-mongodb-session')(session);
-const csrf         = require('csurf');
-const flash        = require('connect-flash');
-const isAuth       = require('./middleware/is-auth');
-const helmet       = require('helmet');
+/***************Mongodb configuratrion********************/
+var mongoose = require('mongoose');
+var configDB = require('./config/database.js');
+//configuration ===============================================================
+mongoose.connect(configDB.url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+}).then(() => {
+  //connection established successfully
+  console.log('connection established successfully')
+}).catch(); {
+  //catch any error during the initial connection
+};
 
-// MongoDB configuration
-var configDB    = require('./config/database.js');
+/**
+ * debug request
+ */
+// mongoose.set('debug', true);
 
-// Routes
-const authRoutes    = require('./routes/auth');
-const voteRoutes    = require('./routes/votes');
-const apiAuthRoutes = require('./routes/apiUser');
-const apiVoteRoutes = require('./routes/apiVote');
-
-// error controller 
-const errorController = require('./controllers/errorController');
-const votesController = require('./controllers/votesController');
-const User            = require('./models/users');
+var userRouter = require('./routes/users');
+var voteRouter = require('./routes/votes');
+var indexRouter = require('./routes/index');
 
 var app = express();
 
-// Add robust session handler
-const store = new MongoDBStore({
-  uri: configDB.url,
-  collection: 'sessions'
-});
+app.use(
+  cookieSession({
+    name: 'simplonVote',
+    keys: ['asq4b4PR'],
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  })
+)
 
-// Security
-const csrfProtection = csrf({
-  maxAge: 3600 * 1000 * 3 // 3 hours
-});
+/**
+ * @MidleWare
+ * UTILISATEUR CONNECTÉ
+ */
+app.use('/*', function (req, res, next) {
+  // console.log(req.session)
+  res.locals.currentUser = {}
+  if (req.session.user) {
+    res.locals.currentUser.login = req.session.user.login // login de l'utilisateur connecté (dans le menu) accessible pour toutes les vues
+    res.locals.currentUser.id = req.session.user._id
+  }
+  next()
+})
+
+/**
+ * @MidleWare
+ * Flash Messages
+ */
+app.use('/*', function (req, res, next) {
+  res.locals.msgFlash = {}
+  if (req.session.msgFlash) {
+    res.locals.msgFlash = req.session.msgFlash
+    req.session.msgFlash = null
+  }
+  next();
+})
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(helmet());
-app.disable('x-powered-by');
-
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Simple session
-app.use(
-  session({
-    name: 'simplonVote',
-    secret: 'asq4b4PRJhpo025HjqeZaEasdz68D',
-    resave: false,
-    saveUninitialized: false,
-    store: store,
-    cookie: {
-      sameSite: true,
-      maxAge: 3600 * 1000 * 3
-    }
-  })
-);
+app.use('/', indexRouter);
+app.use('/api/votes', voteRouter);
+app.use('/api/users', userRouter);
 
-app.use(csrfProtection);
-app.use(flash());
 
-// pass variables locally
-app.use((req, res, next) =>{
-  if (!req.session.userId) {
-    return next();
-  }
-  User.findById(req.session.userId)
-    .then(user => {
-      if (!user) {
-        return next();
-      }
-      req.user = user;
-      res.locals.currentUser   = user.login.toString();
-      res.locals.currentUserId = user._id.toString();
-      next();
-    })
-    .catch(err => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      next(error);
-    });
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  next(createError(404));
 });
 
-app.use((req, res, next) => {
-  res.locals.success_message = req.flash('success');
-  res.locals.error_message   = req.flash('error');
-  res.locals.isAuthenticated = req.session.isLoggedIn;
-  res.locals.csrfToken       = req.csrfToken();
-  next();
-});
+// error handler
+app.use(function (err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-// Routes handler
-app.use(authRoutes);
-app.get('/dashboard', isAuth, votesController.getDashboard);
-app.use('/dashboard', voteRoutes);
-app.use('/api/users', apiAuthRoutes);
-app.use('/api/votes', apiVoteRoutes);
-app.use(errorController.get404);
-
-// general error handler (all except 404)
-app.use((error, req, res, next) => {
-  console.log(error)
-  res.status(error.httpStatusCode).render('error', {
-    title: 'Une erreur est servenue',
-    path: '/errors',
-    statusCode: error.httpStatusCode
-  });
-});
-
-// Connection to mongoDB using moongose
-mongoose.connect(configDB.url, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false
-})
-.then(() => {
-  console.log('connection to database established successfully');
-})
-.catch(err =>{
-  console.log('An error occursed ', err);
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
 });
 
 module.exports = app;

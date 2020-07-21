@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include partials/head %>
+</head>
+
+<body class="container">
+
+    <header>
+        <% include partials/header %>
+    </header>
+
+    <main>
+        <% if(votes.length == 0) { %>
+        <div class="d-flex justify-content-center w-100">
+            <h5 class="alert alert-info my-5"> Vous n'avez pas encore participer à un sujet de vote !</h5>
+        </div>
+        <% } else { %>
+            <div class="row">
+                <% votes.forEach(function(items) { %>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="text-center"><b><%= items.vote.subject %></b> <br /> 
+                                <small>créer par
+                                    <% if (items.vote.createdBy != null) { %>
+                                    <%= items.vote.createdBy.login %><br>
+                                    Statut : <%= items.vote.status %>
+                                    <% } %>
+                                </small>
+                            </p>
+                            <div class="d-flex flex-column align-items-center w-100">
+                                <p class="text-right"> <%= items.vote.participants.length %> / <%= items.vote.quota %> Participants </p>
+                                <% if (items.vote.status == 'inprogress') { %>
+                                    <a class="text-center btn btn-outline-secondary w-25 mb-3" href="/votes/<%= items.vote._id %>"> Voter </a>
+                                <% } %>
+                            </div>
+                            <div class="progress">
+                                <% var vot = items.vote.nbVote / items.vote.quota*100 %>
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: <%= vot %>%;" aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%=  Math.round(vot) %>%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                </div>
+                <% }); %>
+        <% } %> 
+    </main>
+
+<% include partials/modals %>
+
+<footer>
+    <% include partials/footer %>
+</footer>
+
+
+</body>
+
+</html>

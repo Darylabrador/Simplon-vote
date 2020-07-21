@@ -2,17 +2,14 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Créer un sujet de vote</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Créer un sujet</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-
         <div id="error"> </div>
-
         <form id="voteForm" method="POST">
-          <input type="hidden" id="userId" name="userId" value="<%= currentUserId %>">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <input type="hidden" id="userId" name="userId" value="<%= locals.currentUser.id %>">
             <div class="modal-body">
               <div class="form-group">
                 <label for="visibility">Visibilité</label>
@@ -39,7 +36,7 @@
               </div>
             </div>
             <div class="modal-footer">
-                <button id="voteCreation" type="submit" class="btn btn-primary">Créer</button>
+                <button type="submit" class="btn btn-primary">Création</button>
             </div>
         </form>
       </div>

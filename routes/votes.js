@@ -1,184 +1,77 @@
-const express = require('express');
-const { body } = require('express-validator');
+// const express = ;
+const router = require('express').Router();
+const voteController = require('../controllers/voteController.js');
 
-const isAuth = require('../middleware/is-auth');
-
-const adminController = require('../controllers/adminController');
-const votesController = require('../controllers/votesController');
-
-const router = express.Router();
-
-/** Views rotues
+/** Routes de l'API pour les sujets de vote
  * @module routers/votes
  * @requires express express.Router()
  */
 
 /**
- * Return view with votes created by the logged user
- * @name showCreated GET
+ * Renvoie la liste de tout les sujets de votes
+ * @name List GET
  * @function
  * @memberof module:routers/votes
- * @param {string} '/dashboard/created' - uri
- * @param {function} votesController.showCreated
+ * @param {string} '/api/votes' - uri
+ * @param {function} voteController.list
+ * @return {JSON}
  */
-router.get('/created', isAuth, votesController.showCreated);
-
+router.get('/', voteController.list)
 
 /**
- * Return view with votes enrolled by the logged user
- * @name showEnrolled GET
+ * Ajoute un nouveau sujet de vote
+ * @name Add POST
  * @function
  * @memberof module:routers/votes
- * @param {string} '/dashboard/enrolled' - uri
- * @param {function} votesController.showEnrolled
+ * @param {string} '/api/votes' - uri
+ * @param {function} voteController.add
+ * @return {JSON}
  */
-router.get('/enrolled', isAuth, votesController.showEnrolled);
-
+router.post('/', voteController.add)
 
 /**
- * Return view with inprogress votes
- * @name showInprogress GET
+ * Renvoie les informations d'un sujet de vote par rapport à un identifiant 
+ * @name Show GET
  * @function
  * @memberof module:routers/votes
- * @param {string} '/dashboard/inprogress' - uri
- * @param {function} votesController.showInprogress
+ * @param {string} '/api/votes/:id' - uri
+ * @param {function} voteController.show
+ * @return {JSON}
  */
-router.get('/inprogress', isAuth, votesController.showInprogress);
-
+router.get('/:id', voteController.show)
 
 /**
- * Return view with finished votes
- * @name showFinished GET
+ * Modifie un sujet de vote par rapport à son identifiant
+ * @name Update PUT
  * @function
  * @memberof module:routers/votes
- * @param {string} '/dashboard/finished' - uri
- * @param {function} votesController.showFinished
+ * @param {string} '/api/votes/:id' - uri
+ * @param {function} voteController.update
+ * @return {JSON}
  */
-router.get('/finished', isAuth, votesController.showFinished);
-
-
-/**
- * Return view with information about result's vote
- * @name showResult GET
- * @function
- * @memberof module:routers/votes
- * @param {string} '/dashboard/result/:id' - uri
- * @param {function} votesController.showResult
- */
-router.get('/result/:id', isAuth, votesController.showResult);
+router.put('/:id', voteController.update);
 
 /**
- * Return view with information about specific vote
- * @name showVote GET
+ * Supprime un sujet de vote par rapport à son identifiant
+ * @name Delete DELETE
  * @function
  * @memberof module:routers/votes
- * @param {string} '/dashboard/vote/:id' - uri
- * @param {function} votesController.showVote
+ * @param {string} '/api/votes/:id' - uri
+ * @param {function} voteController.delete
+ * @return {JSON}
  */
-router.get('/vote/:id', isAuth, votesController.showVote);
+router.delete('/:id', voteController.delete);
 
-/**
- * Handling post information about creating a subject vote
- * @name addVote POST
- * @function
- * @memberof module:routers/votes
- * @param {string} '/dashboard/vote/add' - uri
- * @param {function} votesController.addVote
- */
-router.post(
-    '/vote/add', 
-    isAuth, 
-    [
-        body('visibility', 'Veuillez choisir la visibilité du vote : public ou privé')
-            .trim()
-            .not()
-            .isEmpty(),
-        body('subject', 'Veuillez renseigner le sujet du vote')
-            .trim()
-            .not()
-            .isEmpty(),
-        body('quota')
-            .custom((value, {req}) =>{
-                if(value < 2){
-                    throw new Error('Le nombre de participant doit être égale ou supérieur à 2')
-                }
-                return true;
-            }),
-        body('createdBy', 'Une information est manquante')
-            .trim()
-            .not()
-            .isEmpty(),
-        body('choices')
-            .custom((value, {req}) =>{
-                if (value < 2) {
-                    throw new Error('Il faut au minimum 2 options de réponse')
-                }
-                return true;
-            }),
-    ],
-    adminController.addVote
-);
 
-/**
- * Handling the post request when user enrolled to subject vote
- * @name postEnrolledUser POST
- * @function
- * @memberof module:routers/votes
- * @param {string} '/dashboard/vote/enrolled' - uri
- * @param {function} adminController.postEnrolledUser
- */
-router.post(
-    '/vote/enrolled', 
-    isAuth, 
-    [
-        body('voteId', 'Nous ne pouvons pas prendre en compte votre participation')
-            .trim()
-            .not()
-            .isEmpty(),
-        body('userId', 'Nous ne pouvons pas prendre en compte votre participation')
-            .trim()
-            .not()
-            .isEmpty(),
-    ],
-    adminController.postEnrolledUser
-);
+// router.get('/api/ajout',voteController.ajout );
+// router.get('/api/votes/:id',voteController.detailvote );
+// router.post('/api/votes',voteController.addvote );
+// router.delete('/api/votes/:id',voteController.deletevote );
+// router.put('/api/votes/:id',voteController.updatevote );
 
-/**
- * Handling the post request when user choose an option to subject vote
- * @name postUserChoice POST
- * @function
- * @memberof module:routers/votes
- * @param {string} '/dashboard/vote/choice' - uri
- * @param {function} adminController.postUserChoice
- */
-router.post(
-    '/vote/choice', 
-    isAuth,
-    [
-        body('voteId', 'Nous ne pouvons pas prendre en compte votre vote')
-            .trim()
-            .not()
-            .isEmpty(),
-        body('userId', 'Nous ne pouvons pas prendre en compte votre vote')
-            .trim()
-            .not()
-            .isEmpty(),
-        body('choice', 'Vous devez choisir une réponse')
-            .trim()
-            .not()
-            .isEmpty()
-    ],
-    adminController.postUserChoice
-);
+// router.post("/api/login",usersController.login);
+// router.post("/api/login",usersController.signup);
+// router.get('/',voteController.liste );
 
-/**
- * Enrolled user to private vote
- * @name postEnrolledPrivateVote GET
- * @function
- * @memberof module:routers/votes
- * @param {string} '/dashboard/share/:shareVoteId' - uri
- * @param {function} adminController.postEnrolledPrivateVote
- */
-router.get('/share/:shareVoteId', isAuth, adminController.postEnrolledPrivateVote);
 
 module.exports = router;

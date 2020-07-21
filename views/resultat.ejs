@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include partials/head %>
+</head>
+<body class="container">
+
+<header>
+    <% include partials/header %>
+</header>
+
+<main>
+
+    <div class="jumbotron">
+        <h1>Résultats</h1>
+        <h5><%= subject %></h5>
+        <% resultat.forEach(element =>{ %>
+            <p> le choix : <%= element.choix %> (<%= Math.round(100*(element.nbvote/totaloptions)) %> %)</p>
+        <% }) %>
+    </div>
+</main>
+
+<% include partials/modals %>
+
+<footer>
+    <% include partials/footer %>
+</footer>
+
+
+</body>
+</html>

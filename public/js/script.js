@@ -5,9 +5,6 @@ let choiceContainer  = document.querySelector('#choiceContainer');
 let btnAddLigne      = document.querySelector('#btnAddLigne');
 let messageInterface = document.querySelector('#error');
 let visibility       = document.querySelector('#visibility');
-let token            = document.querySelector('[name="_csrf"]').value;
-let voteCreationbtn  = document.querySelector('#voteCreation');
-
 let errCompteur = 0;
 
 /**
@@ -38,7 +35,7 @@ function showError(message) {
             messageInterface.classList.remove("alert", "alert-danger");
             messageInterface.innerHTML = "";
             errCompteur = 0;
-        }, 10000);
+        }, 6000);
     }
 }
 
@@ -53,7 +50,7 @@ if(btnAddLigne != undefined){
     <div class="col-1 ml-2 text-right">
         <button type="button" class="btn btn-outline-danger btnDelete"> &times; </button>
     </div>
-    `;
+    `
         choiceContainer.appendChild(choiceLigne);
         let allChoicesLignes = document.querySelectorAll('.choiceDetails');
         let btnDeleteLigne = document.querySelectorAll(".btnDelete");
@@ -77,12 +74,10 @@ if (voteForm !== null){
         let visibilityValue  = visibility.value;
         let choicesValues    = [];
 
-        showSuccess("Votre sujet de vote est en cours de création !");
-        voteCreationbtn.classList.add('disabled');
-
         for (let j = 0; j < choices.length; j++){
             choicesValues.push(choices[j].value);
         }
+
         if (choicesValues.length < 2){
             errCompteur++;
             if (errCompteur == 1) {
@@ -97,6 +92,7 @@ if (voteForm !== null){
                     }
                 }
             }
+
             data = {
                 subject: sujetValue,
                 quota: participantValue,
@@ -104,13 +100,11 @@ if (voteForm !== null){
                 createdBy: userId,
                 visibility: visibilityValue
             }
+
             $.ajax({
                 type: "POST",
-                url: "/dashboard/vote/add",
-                headers: {
-                    'csrf-token' : token,
-                    'Content-Type' : 'application/json; charset=UTF-8'
-                },
+                url: "/votes",
+                contentType: "application/json; charset=UTF-8",
                 data: JSON.stringify(data),
                 dataType: "json",
                 success: function (response) {
@@ -119,23 +113,22 @@ if (voteForm !== null){
                             errCompteur++;
                             if (errCompteur == 1) {
                                 showSuccess(response.message);
-                                voteCreationbtn.classList.remove('disabled');
-                                voteForm.reset();
-                                while (choiceContainer.lastChild) {
-                                    choiceContainer.removeChild(choiceContainer.lastChild);
-                                }
                                 location.href = '/dashboard';
                             }
                         }else{
                             errCompteur++;
                             if (errCompteur == 1) {
-                                voteCreationbtn.classList.remove('disabled');
                                 showError(response.message);
                             }
                         }
                     }
                 }
-            })
+            });
+ 
+            voteForm.reset();
+            while (choiceContainer.lastChild){
+                choiceContainer.removeChild(choiceContainer.lastChild);
+            }
         }
     })
 }

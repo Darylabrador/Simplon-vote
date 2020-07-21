@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include partials/head %>
+</head>
+
+<body class="container">
+
+  <header>
+    <% include partials/header %>
+  </header>
+
+  <main>
+    <div class="row">
+      <% if(votes.length == 0) { %>
+
+        <div class="d-flex justify-content-center w-100">
+          <h5 class="alert alert-info my-5"> Aucun vote n'est disponible pour le moment ! </h5>
+        </div>
+
+      <% } else { %>
+
+        <% votes.forEach(function(vote) { %>
+
+        <% if(vote.participants.includes(locals.currentUser.id)) { %>
+
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <p class="text-center"><b><%= vote.subject %></b> <br /> <small>créer par <% if (vote.createdBy != null) { %>
+                  <%= vote.createdBy.login %> <br> Statut : <%= vote.status %>
+                  <% } %></small></p>
+                    <% if (vote.status == 'finished') { %>
+                      <a href="/result/<%= vote._id %>">Voir le résultat</a>
+                    <% } else { %>
+                      <p class="text-right"> <%= vote.participants.length %> / <%= vote.quota %> Participants </p>
+                    <% } %>
+              <div class="progress">
+                <% var vot = vote.nbVote/vote.quota*100 %>
+                <div class="progress-bar bg-warning" role="progressbar" style="width: <%= vot %>%;" aria-valuenow="<%= vot %>"
+                  aria-valuemin="0" aria-valuemax="100"> <%= vot %>%</div>
+              </div>
+            </div>
+          </div><br />
+
+          <% } else { %>
+
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-body">
+                <p class="text-center"><b><%= vote.subject %></b> <br /> <small>By <% if (vote.createdBy != null) { %>
+                    <%= vote.createdBy.login %> <br> Status : <%= vote.status %>
+                    <% } %></small></p>
+                <div class="d-flex w-100 justify-content-end">
+                  <% if( vote.createdBy._id == locals.currentUser.id ) { %>
+
+                    <% if (vote.status == 'finished') { %>
+                      <a href="/result/<%= vote._id %>">Voir le résultat</a>
+                    <% } else { %>
+                      <p class="text-right"> <%= vote.participants.length %> / <%= vote.quota %> Participants </p>
+                    <% } %>
+            
+                  <% } else { %>
+                 
+                    <% if (vote.status == 'finished') { %>
+                      <a href="/result/<%= vote._id %>">Voir le résultat</a>
+                    <% } else { %>
+                    <p class="text-right"> <%= vote.participants.length %> / <%= vote.quota %> Participants
+                    <form class="mx-3" action="/participate" method="POST">
+                      <input type="hidden" name="voteId" value="<%= vote._id %>">
+                      <input type="hidden" name="userId" value="<%= locals.currentUser.id %>">
+                      <button type="submit" class="rounded p-0 m-0 btn-primary participatedvote">▶️</button>
+                    </form>
+                    </p>
+                    <% } %>
+
+                  <% } %>
+                </div>
+                <div class="progress">
+                  <% var vot = vote.nbVote/vote.quota*100 %>
+                  <div class="progress-bar bg-warning" role="progressbar" style="width: <%= vot %>%;" aria-valuenow="<%= vot %>"
+                    aria-valuemin="0" aria-valuemax="100"> <%=  Math.round(vot) %>%</div>
+                </div>
+              </div>
+            </div><br />
+
+            <% } %>
+          </div>
+          <% }); %>
+      <% } %>
+    </div>
+  </main>
+
+  <% include partials/modals %>
+  
+  <footer>
+    <% include partials/footer %>
+  </footer>
+</body>
+
+</html>
