@@ -43,23 +43,20 @@
                                     <div class="card-footer">
                                         <% if (vote.status == 'finished') { %>
                                         <div class="d-flex justify-content-center">
-                                            <a href="/dashboard/result/<%= vote._id %>" class="btn w-75 py-0"
-                                                style="background: rgba(0, 197, 31, 0.6);">Voir le résultat</a>
+                                            <a href="/dashboard/result/<%= vote._id %>" class="btn resultBtn w-50 py-0">Voir le résultat</a>
                                         </div>
                                         <% } else if (vote.status == 'inprogress') { %>
                                         <div class="progress">
                                             <% var vot = vote.participants.length/vote.quota*100 %>
-                                            <div class="progress-bar" role="progressbar" style="width: <%= vot %>%; background: rgba(27, 159, 233, 0.6);"
-                                                aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%= vote.participants.length %> /
-                                                <%= vote.quota %> Participants
+                                            <div class="progress-bar inprogressBar" role="progressbar" style="width: <%= vot %>%;" aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> 
+                                                <%= vote.participants.length %> / <%= vote.quota %> Participants
                                             </div>
                                         </div>
                                         <% } else { %>
                                         <div class="progress">
                                             <% var vot = vote.participants.length/vote.quota*100 %>
-                                            <div class="progress-bar" role="progressbar" style="width: <%= vot %>%; background: rgba(160, 115, 0, 0.6);"
-                                                aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%= vote.participants.length %> /
-                                                <%= vote.quota %> Participants
+                                            <div class="progress-bar waitingBar" role="progressbar" style="width: <%= vot %>%;" aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> 
+                                                <%= vote.participants.length %> / <%= vote.quota %> Participants
                                             </div>
                                         </div>
                                         <% } %>

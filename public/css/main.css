@@ -50,14 +50,45 @@ a.nav-link.btn:hover{
 
 .waiting{
     color: #A07300;
+    font-weight: bold;
 }
 
 .inprogress{
     color: #1B9FE9;
+    font-weight: bold;
 }
 
 .finished{
-  color: #0D9423;
+    color: #0D9423;
+    font-weight: bold;
+}
+
+.resultBtn{
+    background: rgba(0, 197, 31, 0.6) !important;
+    font-weight: 600 !important;
+}
+
+.inprogressBar{
+    background: rgba(27, 159, 233, 0.6) !important;  
+    font-weight: 600 !important;
+}
+
+.waitingBar {
+    background: rgba(160, 115, 0, 0.6) !important;
+    font-weight: 600 !important;
+}
+
+.progress{
+    height: 25px !important;
+}
+
+.progress-bar{
+    font-size: 0.8rem !important;
+}
+
+.card-footer{
+    padding-top: 0.2rem !important;
+    padding-bottom: 0.2rem !important;
 }
 
 footer .footer{

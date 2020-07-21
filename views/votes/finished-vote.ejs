@@ -14,7 +14,7 @@
                             <div class="col-12 col-md-5 col-lg-3 m-3">
                                 <div class="card">
                                     <div class="card-body">
-                                                            <% if (vote.createdBy._id == currentUserId) { %>
+                                        <% if (vote.createdBy._id == currentUserId) { %>
                                             <p class="text-center">
                                                 <b><%= vote.subject %></b>
                                                 <br>
@@ -36,7 +36,7 @@
                                     </div>
                                     <div class="card-footer">
                                         <div class="d-flex justify-content-center">
-                                            <a href="/dashboard/result/<%= vote._id %>" class="btn w-75 py-0" style="background: rgba(0, 197, 31, 0.6);">Voir le résultat</a>
+                                            <a href="/dashboard/result/<%= vote._id %>" class="btn w-50 py-0 resultBtn">Voir le résultat</a>
                                         </div>
                                     </div>
                                 </div>

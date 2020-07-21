@@ -37,12 +37,20 @@
                     </div>
 
                     <div class="card-footer">
-                        <div class="d-flex justify-content-center">
-                            <a class="text-center btn w-75 py-0" href="/dashboard/vote/<%= vote._id %>" style="background: rgba(27, 159, 233, 0.6);"> Voter </a>
+                    <% if (vote.createdBy._id == currentUserId) { %>
+                        <div class="progress">
+                            <% var vot = vote.participants.length/vote.quota*100 %>
+                            <div class="progress-bar inprogressBar" role="progressbar" style="width: <%= vot %>%;" aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> 
+                                <%= vote.participants.length %> / <%= vote.quota %> Participants
+                            </div>
                         </div>
+                    <% } else { %>
+                        <div class="d-flex justify-content-center">
+                            <a class="text-center btn w-100 py-0 inprogressBar" href="/dashboard/vote/<%= vote._id %>"> Voter </a>
+                        </div>
+                    <% } %>
                     </div>
                 </div>
-                <br />
             </div>
             <% }); %>
         <% } %>

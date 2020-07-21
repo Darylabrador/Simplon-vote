@@ -31,16 +31,16 @@
                 <div class="card-footer">
                     <% if (items.vote.status == 'inprogress') { %>
                         <div class="d-flex justify-content-center">
-                            <a class="text-center btn w-75 py-0" href="/dashboard/vote/<%= items.vote._id %>" style="background: rgba(27, 159, 233, 0.6);"> Voter </a>
+                            <a class="text-center btn w-100 py-0 inprogressBar" href="/dashboard/vote/<%= items.vote._id %>"> Voter </a>
                         </div>
                     <% } else if (items.vote.status == 'finished') { %>
                         <div class="d-flex justify-content-center">
-                            <a href="/dashboard/result/<%= items.vote._id %>" class="btn w-75 py-0" style="background: rgba(0, 197, 31, 0.6);">Voir le résultat</a>
+                            <a href="/dashboard/result/<%= items.vote._id %>" class="btn w-50 py-0 resultBtn">Voir le résultat</a>
                         </div>
                     <% } else { %> 
                     <div class="progress">
                         <% var vot = items.vote.participants.length / items.vote.quota*100 %>
-                        <div class="progress-bar" role="progressbar" style="width: <%= vot %>%; background: rgba(160, 115, 0, 0.6);" aria-valuenow="<%= vot %>"
+                        <div class="progress-bar waitingBar" role="progressbar" style="width: <%= vot %>%;" aria-valuenow="<%= vot %>"
                             aria-valuemin="0" aria-valuemax="100"> <%= items.vote.participants.length %> / <%= items.vote.quota %> Participants 
                         </div>
                     </div>
