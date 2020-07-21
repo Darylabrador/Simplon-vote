@@ -16,8 +16,10 @@ const isAuth       = require('./middleware/is-auth');
 var configDB    = require('./config/database.js');
 
 // Routes
-const authRoutes = require('./routes/auth');
-const voteRoutes = require('./routes/votes');
+const authRoutes    = require('./routes/auth');
+const voteRoutes    = require('./routes/votes');
+const apiAuthRoutes = require('./routes/apiUser');
+const apiVoteRoutes = require('./routes/apiVote');
 
 // error controller 
 const errorController = require('./controllers/errorController');
@@ -93,7 +95,8 @@ app.use((req, res, next) => {
 app.use(authRoutes);
 app.get('/dashboard', isAuth, votesController.getDashboard);
 app.use('/dashboard', voteRoutes);
-
+app.use('/api/users', apiAuthRoutes);
+app.use('/api/votes', apiVoteRoutes);
 app.use(errorController.get404);
 
 // general error handler (all except 404)

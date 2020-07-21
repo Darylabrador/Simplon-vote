@@ -135,19 +135,41 @@ li.page-item.active .page-link{
 
 @media (max-width: 575.98px) { 
     main {
-        min-height: calc(33px + 73vh);
+        min-height: calc(33px + 20vh);
     }
+    
+    main .logSignForm{
+        min-height: calc(33px + 73vh);
+        width: 100% !important;
+    }
+
 }
 
 @media (max-width: 767.98px) { 
     main {
         min-height: calc(33px + 73vh);
     }
+
+    main .logSignForm{
+        min-height: calc(33px + 73vh);
+    }
+
+    .logSignForm{
+        width: 80% !important;
+    }
 }
 
 @media (max-width: 991.98px) { 
-        main {
+    main {
         min-height: calc(33px + 73vh);
+    }
+    
+    main .logSignForm{
+        min-height: calc(33px + 73vh);
+    }
+
+    .logSignForm{
+        width: 80% !important;
     }
 }
 
@@ -155,16 +177,40 @@ li.page-item.active .page-link{
     main {
         min-height: calc(33px + 73vh);
     }
+
+    main .logSignForm{
+        min-height: calc(33px + 73vh);
+    }
+
+    .logSignForm{
+        width: 70% !important;
+    }
 }
 
 @media (min-width: 1200px) AND (max-width: 1799px){ 
     main {
-        min-height: calc(28px + 66vh);
+        min-height: calc(28px + 64vh);
+    }
+
+    main .logSignForm{
+        min-height: calc(28px + 65vh);
+    }
+
+    .logSignForm{
+        width: 50% !important;
     }
 }
 
 @media (min-width: 1800px) {
     main {
-        min-height: calc(33px + 73vh);
+        min-height: calc(35px + 71vh);
+    }
+
+    main .logSignForm{
+        min-height: calc(35px + 71vh);
+    }
+
+    .logSignForm{
+        width: 50% !important;
     }
 }

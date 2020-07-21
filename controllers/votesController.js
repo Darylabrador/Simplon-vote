@@ -255,7 +255,7 @@ exports.showVote = async (req, res, next) => {
         }
         res.render("votes/details", {
             title: "Détails",
-            path: '/dashboard/details',
+            path: '/dashboard/inprogress',
             vote: vote,
             alreadyVoted: notVotedYet,
             errorMessage: null
@@ -324,7 +324,7 @@ exports.showResult = async (req, res, next) => {
 
         res.render('votes/result-vote', {
             title: "Résultat du vote",
-            path: '/dashboard/result',
+            path: '/dashboard/finished',
             subject: subject,
             resultat: result,
             totaloptions: totalOptions,
