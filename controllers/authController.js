@@ -72,7 +72,7 @@ exports.postLogin = async (req, res, next) =>{
 
         if (!user) {
             req.flash('error', 'Adresse email ou mot de passe invalide');
-            return res.redirect('/login');;
+            return res.redirect('/login');
         }
 
         const isEqual = await bcrypt.compare(password, user.password);
@@ -132,6 +132,7 @@ exports.postSignup = async (req, res, next) =>{
         });
 
         await user.save();
+        req.flash('success', 'Votre inscription a bien été pris en compte');
         res.redirect('/login');
 
     } catch (error) {

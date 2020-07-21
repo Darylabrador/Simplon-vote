@@ -39,7 +39,8 @@ exports.getDashboard = async (req, res, next) => {
             hasPreviousPage: page > 1,
             nextPage: page + 1,
             previousPage: page - 1,
-            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE)
+            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE),
+            total: totalItems
         }); 
     } catch (error) {
         const err = new Error(error);
@@ -81,7 +82,8 @@ exports.showCreated = async (req, res, next) => {
             hasPreviousPage: page > 1,
             nextPage: page + 1,
             previousPage: page - 1,
-            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE)
+            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE),
+            total: totalItems
         });
     } catch (error) {
         const err = new Error(error);
@@ -126,7 +128,8 @@ exports.showEnrolled = async (req, res, next) => {
             hasPreviousPage: page > 1,
             nextPage: page + 1,
             previousPage: page - 1,
-            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE)
+            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE),
+            total: totalItems
         });
     } catch (error) {
         const err = new Error(error);
@@ -175,7 +178,8 @@ exports.showInprogress = async (req, res, next) => {
             hasPreviousPage: page > 1,
             nextPage: page + 1,
             previousPage: page - 1,
-            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE)
+            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE),
+            total: totalItems
         });
     } catch (error) {
         const err = new Error(error);
@@ -226,7 +230,8 @@ exports.showFinished = async (req, res, next) => {
             hasPreviousPage: page > 1,
             nextPage: page + 1,
             previousPage: page - 1,
-            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE)
+            lastPage: Math.ceil(totalItems / ITEM_PER_PAGE),
+            total: totalItems
         });
     } catch (error) {
         const err = new Error(error);
