@@ -4,34 +4,31 @@
         <% include ../includes/navigation %>
         <main>
             <% include ../includes/messageFlash %>
-            <div class="row no-gutters">
+            <div class="row no-gutters justify-content-center align-items-center py-5">
                 <% if(votes.length == 0) { %>
                 <div class="d-flex justify-content-center w-100">
                     <h5 class="alert alert-info my-5"> Aucun vote n'est disponible pour le moment ! </h5>
                 </div>
                 <% } else { %>
                     <% votes.forEach(vote => { %>
-                            <div class="col-md-12">
+                            <div class="col-12 col-md-5 col-lg-3 m-3">
                                 <div class="card">
                                     <div class="card-body">
                                         <p class="text-center">
                                             <b><%= vote.subject %></b> <br>
-                                            <small>
-                                                <% if (vote.createdBy != null) { %>
-                                                Statut :
-                                                    <% switch(vote.status) { 
+                                         <small>
+                                                Créer par moi <br> 
+                                                    <% switch (vote.status) { 
                                                         case 'created': %>
-                                                        En attente de participant
+                                                        <span class="waiting"> En attente de participant </span>
                                                         <% break;
                                                         case 'inprogress': %>
-                                                        En cours
+                                                        <span class="inprogress"> En cours </span> 
                                                         <% break;
                                                         case 'finished': %>
-                                                        Fini
+                                                        <span class="finished"> Fini </span>
                                                         <% break;
                                                     } %>
-
-                                                <% } %>
                                             </small>
                                         </p>
 
@@ -41,20 +38,33 @@
                                             <%= shareLinkHost %>/dashboard/share/<%= vote._id %>
                                         </p>
                                         <% } %>
-                
-                                        <div class="d-flex w-100 justify-content-end">
-                                            <% if (vote.status == 'finished') { %>
-                                            <a href="/dashboard/result/<%= vote._id %>">Voir le résultat</a>
-                                            <% } else { %>
-                                            <p class="text-right"> <%= vote.participants.length %> / <%= vote.quota %> Participants </p>
-                                            <% } %>
+                                    </div>
+
+                                    <div class="card-footer">
+                                        <% if (vote.status == 'finished') { %>
+                                        <div class="d-flex justify-content-center">
+                                            <a href="/dashboard/result/<%= vote._id %>" class="btn w-75 py-0"
+                                                style="background: rgba(0, 197, 31, 0.6);">Voir le résultat</a>
                                         </div>
+                                        <% } else if (vote.status == 'inprogress') { %>
                                         <div class="progress">
                                             <% var vot = vote.participants.length/vote.quota*100 %>
-                                            <div class="progress-bar bg-warning" role="progressbar" style="width: <%= vot %>%;"
-                                                aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%=  Math.round(vot) %>%</div>
+                                            <div class="progress-bar" role="progressbar" style="width: <%= vot %>%; background: rgba(27, 159, 233, 0.6);"
+                                                aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%= vote.participants.length %> /
+                                                <%= vote.quota %> Participants
+                                            </div>
                                         </div>
+                                        <% } else { %>
+                                        <div class="progress">
+                                            <% var vot = vote.participants.length/vote.quota*100 %>
+                                            <div class="progress-bar" role="progressbar" style="width: <%= vot %>%; background: rgba(160, 115, 0, 0.6);"
+                                                aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%= vote.participants.length %> /
+                                                <%= vote.quota %> Participants
+                                            </div>
+                                        </div>
+                                        <% } %>
                                     </div>
+                                    
                                 </div>
                             </div>
                     <% }) %>

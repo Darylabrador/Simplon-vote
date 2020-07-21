@@ -4,32 +4,39 @@
         <% include ../includes/navigation %>
         <main>
             <% include ../includes/messageFlash %>
-            <div class="row no-gutters">
+            <div class="row no-gutters justify-content-center align-items-center py-5">
                 <% if(votes.length == 0) { %>
                 <div class="d-flex justify-content-center w-100">
                     <h5 class="alert alert-info my-5"> Aucun vote n'est disponible pour le moment ! </h5>
                 </div>
                 <% } else { %>
                     <% votes.forEach(vote => { %>
-                            <div class="col-md-12">
+                            <div class="col-12 col-md-5 col-lg-3 m-3">
                                 <div class="card">
                                     <div class="card-body">
-                                        <p class="text-center">
-                                            <b><%= vote.subject %></b> <br>
-                                            <small>
-                                                Créer par 
-                                                <% if (vote.createdBy != null) { %>
-                                                <%= vote.createdBy.login %>
-                                                <% } %>
-                                            </small>
-                                        </p>
-                                        <div class="d-flex w-100 justify-content-end">
-                                            <a href="/dashboard/result/<%= vote._id %>">Voir le résultat</a>
-                                        </div>
-                                        <div class="progress">
-                                            <% var vot = vote.participants.length/vote.quota*100 %>
-                                            <div class="progress-bar bg-warning" role="progressbar" style="width: <%= vot %>%;" aria-valuenow="<%= vot %>"
-                                                aria-valuemin="0" aria-valuemax="100"> <%=  Math.round(vot) %>%</div>
+                                                            <% if (vote.createdBy._id == currentUserId) { %>
+                                            <p class="text-center">
+                                                <b><%= vote.subject %></b>
+                                                <br>
+                                                <small>
+                                                    Créer par moi <br>
+                                                </small>
+                                            </p>
+                                        <% } else { %>
+                                            <p class="text-center">
+                                                <b><%= vote.subject %></b><br>
+                                                <small>
+                                                    Créer par
+                                                    <% if (vote.createdBy != null) { %>
+                                                        <%= vote.createdBy.login %> <br> 
+                                                    <% } %>
+                                                </small>
+                                            </p>
+                                        <% } %>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="d-flex justify-content-center">
+                                            <a href="/dashboard/result/<%= vote._id %>" class="btn w-75 py-0" style="background: rgba(0, 197, 31, 0.6);">Voir le résultat</a>
                                         </div>
                                     </div>
                                 </div>

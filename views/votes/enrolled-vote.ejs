@@ -10,9 +10,11 @@
             <h5 class="alert alert-info my-5"> Vous n'avez pas encore participer à un sujet de vote !</h5>
         </div>
         <% } else { %>
-        <div class="row no-gutters">
+
+        <div class="row no-gutters justify-content-center align-items-center py-5">
+
             <% votes.forEach(function(items) { %>
-            <div class="col-md-12">
+            <div class="col-12 col-md-5 col-lg-3 m-3">
                 <div class="card">
                     <div class="card-body">
                         <p class="text-center"><b><%= items.vote.subject %></b> <br>
@@ -23,25 +25,31 @@
                                 <% } %>
                             </small>
                         </p>
-                        <div class="d-flex flex-column align-items-center w-100">
-                            <p class="text-right"> <%= items.vote.participants.length %> / <%= items.vote.quota %> Participants
-                            </p>
-                            <% if (items.vote.status == 'inprogress') { %>
-                            <a class="text-center btn btn-outline-secondary w-25 mb-3" href="/votes/<%= items.vote._id %>">
-                                Voter </a>
-                            <% } %>
-                        </div>
-                        <div class="progress">
-                            <% var vot = items.vote.participants.length / items.vote.quota*100 %>
-                            <div class="progress-bar bg-warning" role="progressbar" style="width: <%= vot %>%;"
-                                aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%=  Math.round(vot) %>%</div>
-                        </div>
                     </div>
                 </div>
-                <br />
+
+                <div class="card-footer">
+                    <% if (items.vote.status == 'inprogress') { %>
+                        <div class="d-flex justify-content-center">
+                            <a class="text-center btn w-75 py-0" href="/dashboard/vote/<%= items.vote._id %>" style="background: rgba(27, 159, 233, 0.6);"> Voter </a>
+                        </div>
+                    <% } else if (items.vote.status == 'finished') { %>
+                        <div class="d-flex justify-content-center">
+                            <a href="/dashboard/result/<%= items.vote._id %>" class="btn w-75 py-0" style="background: rgba(0, 197, 31, 0.6);">Voir le résultat</a>
+                        </div>
+                    <% } else { %> 
+                    <div class="progress">
+                        <% var vot = items.vote.participants.length / items.vote.quota*100 %>
+                        <div class="progress-bar" role="progressbar" style="width: <%= vot %>%; background: rgba(160, 115, 0, 0.6);" aria-valuenow="<%= vot %>"
+                            aria-valuemin="0" aria-valuemax="100"> <%= items.vote.participants.length %> / <%= items.vote.quota %> Participants 
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+               
             </div>
             <% }); %>
-            <% } %>
+        <% } %>
     </main>
     <% include ../includes/footer %>
     <% include ../includes/modals %>
