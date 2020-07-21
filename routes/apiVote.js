@@ -32,17 +32,16 @@ router.get('/', apiVoteController.list);
  */
 router.get('/:id', apiVoteController.show);
 
-/**
- * Add new subject vote
- * @name Add POST
- * @function
- * @memberof module:routers/apiVote
- * @param {string} '/api/votes' - uri
- * @param {function} apiVoteController.add
- * @return {JSON}
- */
-router.post('/', apiVoteController.add)
-
+// /**
+//  * Add new subject vote
+//  * @name Add POST
+//  * @function
+//  * @memberof module:routers/apiVote
+//  * @param {string} '/api/votes' - uri
+//  * @param {function} apiVoteController.add
+//  * @return {JSON}
+//  */
+// router.post('/', apiVoteController.add)
 
 // /**
 //  * Modify specific subject vote thanks to id

@@ -33,16 +33,16 @@ router.get('/', apiUserController.list);
  */
 router.get('/:id', apiUserController.show);
 
-/**
- * Add a new user
- * @name Add POST
- * @function
- * @memberof module:routers/apiUser
- * @param {string} '/api/users' - uri
- * @param {function} apiUserController.add
- * @return {JSON}
- */
-router.post('/', apiUserController.add);
+// /**
+//  * Add a new user
+//  * @name Add POST
+//  * @function
+//  * @memberof module:routers/apiUser
+//  * @param {string} '/api/users' - uri
+//  * @param {function} apiUserController.add
+//  * @return {JSON}
+//  */
+// router.post('/', apiUserController.add);
 
 // /**
 //  * Get information about one specific user identify by id
