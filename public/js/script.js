@@ -6,6 +6,8 @@ let btnAddLigne      = document.querySelector('#btnAddLigne');
 let messageInterface = document.querySelector('#error');
 let visibility       = document.querySelector('#visibility');
 let token            = document.querySelector('[name="_csrf"]').value;
+let voteCreationbtn  = document.querySelector('#voteCreation');
+
 let errCompteur = 0;
 
 /**
@@ -75,6 +77,9 @@ if (voteForm !== null){
         let visibilityValue  = visibility.value;
         let choicesValues    = [];
 
+        showSuccess("Votre sujet de vote est en cours de création !");
+        voteCreationbtn.classList.add('disabled');
+
         for (let j = 0; j < choices.length; j++){
             choicesValues.push(choices[j].value);
         }
@@ -114,6 +119,7 @@ if (voteForm !== null){
                             errCompteur++;
                             if (errCompteur == 1) {
                                 showSuccess(response.message);
+                                voteCreationbtn.classList.remove('disabled');
                                 voteForm.reset();
                                 while (choiceContainer.lastChild) {
                                     choiceContainer.removeChild(choiceContainer.lastChild);
@@ -123,6 +129,7 @@ if (voteForm !== null){
                         }else{
                             errCompteur++;
                             if (errCompteur == 1) {
+                                voteCreationbtn.classList.remove('disabled');
                                 showError(response.message);
                             }
                         }
