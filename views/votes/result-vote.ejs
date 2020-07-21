@@ -3,14 +3,20 @@
 
 <body>
     <% include ../includes/navigation %>
-    <main>
-        <% include ../includes/messageFlash %>
-        <div class="jumbotron">
-            <h1>Résultats</h1>
-            <h5><%= subject %></h5>
+    <main class="container p-5">
+        <div id="detail" class="py-5 my-5 text-center">
+            <div class="text-center detail__subject py-2 mx-5">
+                <h4>Résultats</h4>
+                <h6 class="detailTitre"><%= subject %></h6>
+            </div>
+
+            <div class="my-5">
             <% resultat.forEach(element =>{ %>
-            <p> le choix : <%= element.choix %> (<%= Math.round(100*(element.nbvote/totaloptions)) %> %)</p>
+                <p> <%= element.choix %>  ( <%= Math.round(100*(element.nbvote/totaloptions)) %> % )</p>
             <% }) %>
+            </div>
+
+            <a class="btn btnVote w-25 mt-5">Retour au dashboard</a>
         </div>
     </main>
     <% include ../includes/footer %>

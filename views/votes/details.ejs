@@ -3,15 +3,13 @@
 
 <body>
     <% include ../includes/navigation %>
-    <main>
-        <% include ../includes/messageFlash %>
-        <div class="jumbotron">
-            <div class="text-center">
-                <h3 class="text-danger"><%= vote.subject %></h3>
-                <p class="text-muted"><%= vote.nbVote %> / <%= vote.quota %> votes </p>
+    <main class="container p-5">
+        <div id="detail" class="py-5 my-5">
+            <div class="text-center detail__subject py-2 mx-5">
+                <h5 class="detailTitre"><%= vote.subject %></h5>
             </div>
             <% if (alreadyVoted == 0) { %>
-            <h5 class="mt-5 text-center"> Votre vote a été pris en compte ! <br> Le résultat sera bientôt disponible !</h5>
+            <h5 class="mt-5 py-5 text-center"> Votre vote a été pris en compte ! <br> Le résultat sera bientôt disponible !</h5>
             <% } else { %>
             <form class="form text-center mt-5" action="/dashboard/vote/choice" method="POST">
                 <input type="hidden" name="userId" value="<%= locals.currentUserId %>">
@@ -25,7 +23,7 @@
                     </div>
                     <% }) %>
                 </div>
-                <button type="submit" class="btn btn-primary w-25">Voter</button>
+                <button type="submit" class="btn btnVote w-25 mt-5">Voter</button>
             </form>
             <% } %>
         </div>
