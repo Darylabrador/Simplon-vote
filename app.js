@@ -11,6 +11,7 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf         = require('csurf');
 const flash        = require('connect-flash');
 const isAuth       = require('./middleware/is-auth');
+const helmet       = require('helmet');
 
 // MongoDB configuration
 var configDB    = require('./config/database.js');
@@ -35,11 +36,16 @@ const store = new MongoDBStore({
 });
 
 // Security
-const csrfProtection = csrf();
+const csrfProtection = csrf({
+  maxAge: 3600 * 1000 * 3 // 3 hours
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+app.use(helmet());
+app.disable('x-powered-by');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -51,10 +57,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
     name: 'simplonVote',
-    secret: 'asq4b4PR',
+    secret: 'asq4b4PRJhpo025HjqeZaEasdz68D',
     resave: false,
     saveUninitialized: false,
-    store: store
+    store: store,
+    cookie: {
+      sameSite: true,
+      maxAge: 3600 * 1000 * 3
+    }
   })
 );
 
