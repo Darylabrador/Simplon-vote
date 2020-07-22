@@ -155,10 +155,13 @@ footer .footer{
     }
     
     main .logSignForm{
-        min-height: calc(33px + 73vh);
         width: 100% !important;
     }
 
+    .flashMessage{
+        font-size: calc(0.5em + 1vw);
+        width: 100% !important;
+    }
 }
 
 @media (max-width: 767.98px) { 
@@ -166,12 +169,13 @@ footer .footer{
         min-height: calc(33px + 73vh);
     }
 
-    main .logSignForm{
-        min-height: calc(33px + 73vh);
-    }
-
     .logSignForm{
         width: 80% !important;
+    }
+
+    .flashMessage{
+        font-size: calc(0.5em + 1vw);
+        width: 100% !important;
     }
 }
 
@@ -179,22 +183,19 @@ footer .footer{
     main {
         min-height: calc(33px + 73vh);
     }
-    
-    main .logSignForm{
-        min-height: calc(33px + 73vh);
-    }
 
     .logSignForm{
         width: 80% !important;
+    }
+
+    .flashMessage{
+        font-size: calc(0.4em + 1vw);
+        width: 100% !important;
     }
 }
 
 @media (max-width: 1199.98px) { 
     main {
-        min-height: calc(33px + 73vh);
-    }
-
-    main .logSignForm{
         min-height: calc(33px + 73vh);
     }
 
@@ -208,10 +209,6 @@ footer .footer{
         min-height: calc(28px + 64vh);
     }
 
-    main .logSignForm{
-        min-height: calc(28px + 65vh);
-    }
-
     .logSignForm{
         width: 50% !important;
     }
@@ -219,10 +216,6 @@ footer .footer{
 
 @media (min-width: 1800px) {
     main {
-        min-height: calc(35px + 71vh);
-    }
-
-    main .logSignForm{
         min-height: calc(35px + 71vh);
     }
 
