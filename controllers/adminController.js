@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const { validationResult } = require('express-validator');
 
+const io                   = require('../socket');
 const User                 = require('../models/users');
 const Vote                 = require('../models/votes');
 const UsersVotes           = require('../models/usersVotes');
@@ -40,13 +41,17 @@ exports.addVote = async (req, res) => {
             visibility,
             status: 'created'
         });
-        await vote.save();
+        const result = await vote.save();
+        if (result.visibility == 'public'){
+            io.getIO().emit('vote', {
+                action: 'create'
+            });
+        }
         res.status(201).json({
             success: true,
             message: "Votre sujet de vote a bien été ajouté !"
         });
     } catch (error) {
-        console.log(error);
         res.json({
             success: false,
             message: "Une erreur est survenue lors de l'ajout !"
@@ -102,7 +107,16 @@ exports.postEnrolledUser = async (req, res, next) =>{
                 if (nbParticipant == nbMaxParticipant) {
                     await Vote.update({ _id: voteId }, { $set: { status: 'inprogress' } });
                     req.flash('success', `Le vote est ouvert : ${participantLength.subject}`);
+
+                    if (participantLength.visibility === 'public'){
+                        io.getIO().emit('vote', {
+                            action: 'open'
+                        });
+                    }
                 } else {
+                    io.getIO().emit('vote', {
+                        action: 'enrolled'
+                    });
                     req.flash('success', 'Vous êtes inscrit à un vote');
                 }
 
@@ -142,6 +156,11 @@ exports.postUserChoice = async (req, res) => {
 
             if (nbVote == quota) {
                 await Vote.update({ _id: voteId }, { $set: { status: 'finished' } });
+                if (finishedVote.visibility === 'public'){
+                    io.getIO().emit('vote', {
+                        action: 'result'
+                    });
+                }
             }
 
             req.flash('success', 'Votre vote a bien été pris en compte');
