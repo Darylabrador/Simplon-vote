@@ -8,7 +8,7 @@ const votesController = require('../controllers/votesController');
 
 const router = express.Router();
 
-/** Views rotues
+/** Views routes
  * @module routers/votes
  * @requires express express.Router()
  */
@@ -180,5 +180,57 @@ router.post(
  * @param {function} adminController.postEnrolledPrivateVote
  */
 router.get('/share/:shareVoteId', isAuth, adminController.postEnrolledPrivateVote);
+
+
+/**
+ * get information about vote editing
+ * @name getEditVote GET
+ * @function
+ * @memberof module:routers/votes
+ * @param {string} '/dashboard/vote/edit/:id' - uri
+ * @param {function} votesController.getEditVote
+ */
+router.get('/vote/edit/:id', isAuth, votesController.getEditVote);
+
+/**
+ * Update information about vote
+ * @name postEditVote POST
+ * @function
+ * @memberof module:routers/votes
+ * @param {string} '/dashboard/vote/edit' - uri
+ * @param {function} adminController.postEditVote
+ */
+router.post(
+    '/vote/edit', 
+    isAuth, 
+    [
+        body('voteId', 'Une erreur est survenue, veuillez reessayer !')
+            .trim()
+            .not()
+            .isEmpty(),
+        body('visibility', 'Veuillez choisir la visibilité du vote : public ou privé')
+            .trim()
+            .not()
+            .isEmpty(),
+        body('subject', 'Veuillez renseigner le sujet du vote')
+            .trim()
+            .not()
+            .isEmpty(),
+        body('quota')
+            .custom((value, { req }) => {
+                if (value < 2) {
+                    throw new Error('Le nombre de participant doit être égale ou supérieur à 2')
+                }
+                return true;
+            }),
+        body('choices')
+            .custom((value, { req }) => {
+                if (value < 2) {
+                    throw new Error('Il faut au minimum 2 options de réponse')
+                }
+                return true;
+            })
+    ], 
+    adminController.postEditVote);
 
 module.exports = router;

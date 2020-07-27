@@ -12,7 +12,7 @@
 
         <form id="voteForm" method="POST">
           <input type="hidden" id="userId" name="userId" value="<%= currentUserId %>">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <input type="hidden" id="tokenAdd" name="_csrf" value="<%= csrfToken %>">
             <div class="modal-body">
               <div class="form-group">
                 <label for="visibility">Visibilité</label>

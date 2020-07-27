@@ -11,6 +11,7 @@ const Vote       = require('../../models/votes');
 * @memberof module:controllers/apiVotes
 * @function
 * @returns {json} votes
+* @throws {json} send JSON with error
 */
 exports.list = async (req, res) => {
     try {
@@ -26,6 +27,7 @@ exports.list = async (req, res) => {
  * @memberof module:controllers/apiVotes
  * @function
  * @returns {json} vote
+ * @throws {json} send JSON with error
  */
 exports.show = async (req, res) => {
     const { id } = req.params;

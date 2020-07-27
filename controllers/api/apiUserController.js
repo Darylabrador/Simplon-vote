@@ -10,6 +10,7 @@ const User       = require('../../models/users');
 * @memberof module:controllers/apiUser
 * @function
 * @returns {json} users
+* @throws {json} send JSON with error
 */
 exports.list = async (req, res) => {
     try {
@@ -29,6 +30,7 @@ exports.list = async (req, res) => {
  * @memberof module:controllers/apiUser
  * @function
  * @returns {json} user
+ * @throws {json} send JSON with error
  */
 exports.show = async (req, res) => {
     const { id } = req.params

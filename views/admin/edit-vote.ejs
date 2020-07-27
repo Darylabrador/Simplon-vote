@@ -3,10 +3,71 @@
 
 <body>
     <% include ../includes/navigation %>
-    <main>
-        <h1> You are on the editing vote </h1>
+    <main class="container-fluid d-flex justify-content-center align-items-center mb-5">
+        <div class="editContainer my-5 px-5 pb-4">
+            <h3 class="text-center py-4"> Modification </h3>
+    
+            <form id="editForm" action="/dashboard/vote/edit" class="form" method="POST">
+                <% include ../includes/messageFlash %>
+                <div id="errorEdit"></div>
+
+                <input id="voteId" type="hidden" name="voteId" value="<%= vote._id %>">
+                <input id="csrfEdit" type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                <div class="form-group">
+                    <label for="visibilityEdit">Visibilité</label>
+                    <select name="visibility" id="visibilityEdit" class="form-control">
+                        <% if( vote.visibility == 'public ') { %>
+                            <option value="public" selected> Public </option>
+                            <option value="private"> Privé </option>
+                        <% } else { %>
+                            <option value="public"> Public </option>
+                            <option value="private" selected> Privé </option>
+                        <% } %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sujetEdit">Sujet</label>
+                    <input type="text" class="form-control" id="sujetEdit" value="<%= vote.subject %>">
+                </div>
+
+                <div class="form-group">
+                    <label for="participantEdit">Nombre de participant</label>
+                    <input type="number" class="form-control" id="participantEdit" min="2" value="<%= vote.quota %>">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-group">
+                        <div class="text-center mb-3">
+                            <button type="button" id="btnAddLigneEdit" class="btn btn-outline-secondary">Cliquez pour ajouter un choix</button>
+                        </div>
+                        <div id="choiceContainerEdit">
+                            <% vote.choices.forEach(choix =>{ %>
+                                <div class="row no-gutters mb-2 choiceDetailsEdit align-items-center">
+                                    <div class="col">
+                                        <input type="text" name="choiceEdit" class="choiceEdit form-control" value="<%= choix %>">
+                                    </div>
+                                    <div class="col-1 ml-2 text-right">
+                                        <button type="button" class="btn btn-outline-danger btnDeleteEdit"> &times; </button>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 text-center pb-4 mt-5">
+                    <button id="voteEditbtn" type="submit" class="btn btn-primary editBtn"> Modifier </button>
+                </div>
+
+            </form>
+        </div>
     </main>
     <% include ../includes/footer %>
+    <% include ../includes/modals %>
+    <script src="/js/script.js"></script>
+    <script src="/js/edit.js"></script>
 </body>
 
 </html>

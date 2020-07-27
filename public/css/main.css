@@ -61,13 +61,13 @@ li.page-item.active .page-link{
 
 /* --- LOGIN / SIGNUP FORM ---- */
 
-.logSignForm{
+.editContainer, .logSignForm{
     background: rgba(223, 223, 223, 0.2);
     border: 2px solid rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
 
-.logSignBtn, .btnVote{
+.editBtn, .logSignBtn, .btnVote{
     background: rgba(223, 223, 223, 0.8) !important;
     border: 1px solid rgba(0, 0, 0, 0.35) !important;
     border-radius: 5px !important;
@@ -154,13 +154,17 @@ footer .footer{
         min-height: calc(33px + 20vh);
     }
     
-    main .logSignForm{
+    main .logSignForm, main .editContainer {
         width: 100% !important;
     }
 
     .flashMessage{
         font-size: calc(0.5em + 1vw);
         width: 100% !important;
+    }
+
+    .editBtn, .logSignBtn, .btnVote {
+        font-size: calc(0.5em + 1vw);
     }
 }
 
@@ -169,7 +173,7 @@ footer .footer{
         min-height: calc(33px + 73vh);
     }
 
-    .logSignForm{
+    .logSignForm, .editContainer {
         width: 80% !important;
     }
 
@@ -184,7 +188,7 @@ footer .footer{
         min-height: calc(33px + 73vh);
     }
 
-    .logSignForm{
+    .logSignForm, .editContainer {
         width: 80% !important;
     }
 
@@ -199,7 +203,7 @@ footer .footer{
         min-height: calc(33px + 73vh);
     }
 
-    .logSignForm{
+    .logSignForm, .editContainer {
         width: 70% !important;
     }
 }
@@ -209,7 +213,7 @@ footer .footer{
         min-height: calc(28px + 64vh);
     }
 
-    .logSignForm{
+    .logSignForm, .editContainer {
         width: 50% !important;
     }
 }
@@ -219,7 +223,7 @@ footer .footer{
         min-height: calc(35px + 71vh);
     }
 
-    .logSignForm{
+    .logSignForm, .editContainer {
         width: 50% !important;
     }
 }

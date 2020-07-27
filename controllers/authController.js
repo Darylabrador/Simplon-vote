@@ -51,7 +51,7 @@ exports.getSignup = (req, res, next) => {
  * Handle post login
  *
  * @function postLogin
- * @returns {VIEW} redirect to '/votes/dashboard'
+ * @returns {VIEW} redirect to '/dashboard'
  * @throws Will throw an error if one error occursed
  */
 exports.postLogin = async (req, res, next) =>{

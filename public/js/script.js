@@ -5,41 +5,38 @@ let choiceContainer  = document.querySelector('#choiceContainer');
 let btnAddLigne      = document.querySelector('#btnAddLigne');
 let messageInterface = document.querySelector('#error');
 let visibility       = document.querySelector('#visibility');
-let token            = document.querySelector('[name="_csrf"]').value;
+let token            = document.querySelector('#tokenAdd').value;
 let voteCreationbtn  = document.querySelector('#voteCreation');
-
-let errCompteur = 0;
+let data;
 
 /**
- * Affichage du message de success avec un controle
+ * Show error message
  * @param {string} message 
  */
 function showSuccess(message) {
-    messageInterface.classList.add("alert", "alert-success");
-    messageInterface.innerHTML = message;
-    if (errCompteur == 1) {
-        setTimeout(() => {
-            messageInterface.classList.remove("alert", "alert-success");
-            messageInterface.innerHTML = "";
-            errCompteur = 0;
-        }, 8000);
-    }
+    messageInterface.innerHTML = `
+    <div class="alert alert-success alert-dismissible fade show mt-0 flashMessage" role="alert">
+        <strong>${message}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    `;
 }
 
 /**
- * Affichage du message d'erreur avec un controle
+ * Show success message
  * @param {string} message 
  */
 function showError(message) {
-    messageInterface.classList.add("alert", "alert-danger");
-    messageInterface.innerHTML = message;
-    if (errCompteur == 1) {
-        setTimeout(() => {
-            messageInterface.classList.remove("alert", "alert-danger");
-            messageInterface.innerHTML = "";
-            errCompteur = 0;
-        }, 10000);
-    }
+    messageInterface.innerHTML = `
+    <div class="alert alert-danger alert-dismissible fade show mt-0 flashMessage" role="alert">
+        <strong>${message}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    `;
 }
 
 if(btnAddLigne != undefined){
@@ -78,23 +75,19 @@ if (voteForm !== null){
         let choicesValues    = [];
 
         showSuccess("Votre sujet de vote est en cours de création !");
-        voteCreationbtn.classList.add('disabled');
+        voteCreationbtn.classList.add('d-none');
 
         for (let j = 0; j < choices.length; j++){
             choicesValues.push(choices[j].value);
         }
         if (choicesValues.length < 2){
-            errCompteur++;
-            if (errCompteur == 1) {
-                showError('Il faut plus de deux choix');
-            }
+            showError('Il faut plus de deux choix');
+            voteCreationbtn.classList.remove('d-none');
         }else{
             for (let k = 0; k < choicesValues.length; k++){
                 if (choicesValues[k] == ""){
-                    errCompteur++;
-                    if (errCompteur == 1) {
-                        showError('Il ne faut pas que les choix soient vides');
-                    }
+                    showError('Il ne faut pas que les choix soient vides'); 
+                    voteCreationbtn.classList.remove('d-none');
                 }
             }
             data = {
@@ -116,22 +109,17 @@ if (voteForm !== null){
                 success: function (response) {
                     if(response != null){
                         if (response.success){
-                            errCompteur++;
-                            if (errCompteur == 1) {
-                                showSuccess(response.message);
-                                voteCreationbtn.classList.remove('disabled');
-                                voteForm.reset();
-                                while (choiceContainer.lastChild) {
-                                    choiceContainer.removeChild(choiceContainer.lastChild);
-                                }
-                                location.href = '/dashboard';
+                            showSuccess(response.message);
+                            voteCreationbtn.classList.remove('d-none');
+                            voteForm.reset();
+                            while (choiceContainer.lastChild) {
+                                choiceContainer.removeChild(choiceContainer.lastChild);
                             }
+                            location.href = '/dashboard';
+                            
                         }else{
-                            errCompteur++;
-                            if (errCompteur == 1) {
-                                voteCreationbtn.classList.remove('disabled');
-                                showError(response.message);
-                            }
+                            voteCreationbtn.classList.remove('d-none');
+                            showError(response.message);
                         }
                     }
                 }

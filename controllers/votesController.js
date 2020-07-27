@@ -242,9 +242,9 @@ exports.showFinished = async (req, res, next) => {
 
 
 /**
- * Get one vote page
+ * Get one vote
  * 
- * Render one vote page
+ * Render one vote
  * @function showVote
  * @returns {VIEW} detail view
  * @throws Will throw an error if one error occursed
@@ -306,7 +306,7 @@ exports.showResult = async (req, res, next) => {
             }
             if (usersChoice[i + 1] != undefined) {
                 if (usersChoice[i] != usersChoice[i + 1]) {
-                    // affectation de la valeur dans le tableau
+                    // add to array
                     resultChoice = {
                         choix: choicesArray[prev],
                         nbvote: count
@@ -316,7 +316,7 @@ exports.showResult = async (req, res, next) => {
                     count = 0;
                 }
             } else {
-                // affectation de la valeur dans le tableau
+                // add to array
                 resultChoice = {
                     choix: choicesArray[prev],
                     nbvote: count
@@ -335,6 +335,36 @@ exports.showResult = async (req, res, next) => {
             totaloptions: totalOptions,
             errorMessage: null
         });
+    } catch (error) {
+        const err = new Error(error);
+        err.httpStatusCode = 500;
+        return next(err);
+    }
+};
+
+/** Get subject vote info to edit
+ * @name getEditVote
+ * @function
+ * @param {string} voteId
+ * @throws Will throw an error if one error occursed
+ */
+exports.getEditVote = async (req, res) => {
+    const voteId = req.params.id;
+    try {
+        const vote = await Vote.findById(voteId);
+
+        if (vote.createdBy.toString() === req.user._id.toString()) {
+            res.render("admin/edit-vote", {
+                title: "Modification",
+                path: '/dashboard/created',
+                vote: vote,
+                errorMessage: null
+            }); 
+
+        } else {
+            req.flash('error', 'Action non permise !');
+            res.redirect('/dashboard');
+        }
     } catch (error) {
         const err = new Error(error);
         err.httpStatusCode = 500;

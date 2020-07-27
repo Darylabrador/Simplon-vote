@@ -133,13 +133,19 @@
                                                 </div>
                                             </div>
                                         <% } else { %>
-                                            <div class="progress">
-                                                <% var vot = vote.participants.length/vote.quota*100 %>
-                                                <div class="progress-bar waitingBar" role="progressbar" style="width: <%= vot %>%;"
-                                                    aria-valuenow="<%= vot %>" aria-valuemin="0" aria-valuemax="100"> <%= vote.participants.length %> /
-                                                    <%= vote.quota %> Participants
+                                            <% if (vote.participants.length == 0) { %>
+                                                <div class="d-flex justify-content-center">
+                                                    <a href="/dashboard/vote/edit/<%= vote._id %>" class="btn waitingBar w-100 py-0">Modifier</a>
                                                 </div>
-                                            </div>
+                                            <% } else { %>
+                                                <div class="progress">
+                                                    <% var vot = vote.participants.length/vote.quota*100 %>
+                                                    <div class="progress-bar waitingBar" role="progressbar" style="width: <%= vot %>%;" aria-valuenow="<%= vot %>"
+                                                        aria-valuemin="0" aria-valuemax="100">
+                                                        <%= vote.participants.length %> / <%= vote.quota %> Participants
+                                                    </div>
+                                                </div>
+                                            <% } %>
                                         <% } %>
                                     </div>
                                 </div>

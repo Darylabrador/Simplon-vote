@@ -18,7 +18,7 @@ const UsersVotes           = require('../models/usersVotes');
  * @param {array} participants
  * @param {string} visibility ['public', 'private']
  * @param {string} status ['created', 'inprogress', 'finished']
- * @throws {JSON} - Renvoie un JSON en cas d'erreur
+ * @throws {JSON} - Send JSON if we have an error
  */
 exports.addVote = async (req, res) => {
     const { subject, quota, choices, createdBy, visibility } = req.body;
@@ -64,7 +64,7 @@ exports.addVote = async (req, res) => {
  * @function
  * @param {string} voteId
  * @param {string} userId
- * @throws {JSON} - Renvoie un JSON en cas d'erreur
+ * @throws Will throw an error if one error occursed
  */
 exports.postEnrolledUser = async (req, res, next) =>{
     const { voteId, userId } = req.body;
@@ -138,7 +138,7 @@ exports.postEnrolledUser = async (req, res, next) =>{
  * @function
  * @param {string} voteId
  * @param {string} userId
- * @throws {JSON} - Renvoie un JSON en cas d'erreur
+ * @throws Will throw an error if one error occursed
  */
 exports.postUserChoice = async (req, res) => {
     try {
@@ -178,7 +178,7 @@ exports.postUserChoice = async (req, res) => {
  * @name postEnrolledPrivateVote
  * @function
  * @param {string} shareVoteId
- * @throws {JSON} - Renvoie un JSON en cas d'erreur
+ * @throws Will throw an error if one error occursed
  */
 exports.postEnrolledPrivateVote = async (req, res, next) => {
     const shareVoteId = req.params.shareVoteId;
@@ -231,6 +231,60 @@ exports.postEnrolledPrivateVote = async (req, res, next) => {
                 req.flash('error', 'Vous participer déjà à ce vote');
                 res.redirect('/dashboard');
             }
+        }
+    } catch (error) {
+        const err = new Error(error);
+        err.httpStatusCode = 500;
+        return next(err);
+    }
+};
+
+/** Modify subject vote
+ * @name postEditVote
+ * @function
+ * @param {string} voteId
+ * @param {string} subject
+ * @param {integer} quota
+ * @param {array} choices
+ * @param {string} visibility ['public', 'private']
+ * @throws Will throw an error if one error occursed
+ */
+exports.postEditVote = async (req, res) => {
+    const {voteId, subject, quota, choices, visibility} = req.body;
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.json({
+            success: false,
+            message: errors.array()[0].msg
+        });
+    }
+
+    try {
+        const voteEdit = await Vote.findById(voteId);
+        if (voteEdit.createdBy.toString() == req.user._id.toString()){
+            if (voteEdit.participants.length == 0){
+
+                voteEdit.visibility = visibility;
+                voteEdit.subject    = subject;
+                voteEdit.quota      = quota;
+                voteEdit.choices    = choices;
+
+                await voteEdit.save();
+
+                res.status(201).json({
+                    success: true,
+                    message: "Votre sujet de vote a bien été mise à jour !"
+                });
+            } else { 
+                res.json({
+                    success: false,
+                    message: "La modification est bloqué, il y a déjà un participant !"
+                });
+            }
+        }else{
+            req.flash('error', 'Action non permise !');
+            res.redirect('/dashboard');
         }
     } catch (error) {
         const err = new Error(error);
