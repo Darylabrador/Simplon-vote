@@ -51,11 +51,13 @@ exports.addVote = async (req, res) => {
             success: true,
             message: "Votre sujet de vote a bien été ajouté !"
         });
+        return result;
     } catch (error) {
         res.json({
             success: false,
             message: "Une erreur est survenue lors de l'ajout !"
         });
+        return error;
     }
 };
 

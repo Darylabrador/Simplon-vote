@@ -96,7 +96,8 @@ exports.postLogin = async (req, res, next) =>{
     } catch (error) {
         const err = new Error(error);
         err.httpStatusCode = 500;
-        return next(err);
+        next(err);
+        return err;
     }
 }
 
@@ -137,10 +138,10 @@ exports.postSignup = async (req, res, next) =>{
             password: hashedPwd
         });
 
-        await user.save();
+        const userCreated = await user.save();
         req.flash('success', 'Votre inscription a bien été pris en compte');
         res.redirect('/login');
-
+        return userCreated;
     } catch (error) {
         return res.status(500).render('auth/signup', {
             path: '/signup',

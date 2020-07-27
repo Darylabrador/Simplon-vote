@@ -7,7 +7,8 @@
     "start": "node ./bin/www",
     "dev": "SET NODE_ENV=development && nodemon ./bin/www",
     "prod": "SET NODE_ENV=production && node ./bin/www",
-    "doc": "./node_modules/.bin/jsdoc -c ./js-doc-conf.json"
+    "doc": "./node_modules/.bin/jsdoc -c ./js-doc-conf.json",
+    "test": "mocha --timeout 10000"
   },
   "author": "ABRADOR Daryl",
   "dependencies": {
@@ -30,6 +31,10 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "chai": "^4.2.0",
+    "mocha": "^8.0.1",
+    "mongodb": "^3.5.9",
+    "nodemon": "^2.0.4",
+    "sinon": "^9.0.2"
   }
 }
