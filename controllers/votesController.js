@@ -352,7 +352,6 @@ exports.getEditVote = async (req, res) => {
     const voteId = req.params.id;
     try {
         const vote = await Vote.findById(voteId);
-
         if (vote.createdBy.toString() === req.user._id.toString()) {
             res.render("admin/edit-vote", {
                 title: "Modification",

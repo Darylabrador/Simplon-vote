@@ -13,16 +13,17 @@
 
                 <input id="voteId" type="hidden" name="voteId" value="<%= vote._id %>">
                 <input id="csrfEdit" type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input id="visibility" type="hidden" value="<%= vote.visibility %>">
 
                 <div class="form-group">
                     <label for="visibilityEdit">Visibilité</label>
                     <select name="visibility" id="visibilityEdit" class="form-control">
-                        <% if( vote.visibility == 'public ') { %>
-                            <option value="public" selected> Public </option>
+                        <% if( vote.visibility === "public") { %>
+                            <option value="public" selected=""> Public </option>
                             <option value="private"> Privé </option>
                         <% } else { %>
                             <option value="public"> Public </option>
-                            <option value="private" selected> Privé </option>
+                            <option value="private" selected=""> Privé </option>
                         <% } %>
                     </select>
                 </div>
