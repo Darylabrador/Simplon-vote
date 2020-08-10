@@ -3,7 +3,7 @@
 const config = {
   mongodb: {
     // TODO Change (or review) the url to your MongoDB:
-    url: "db",
+    url: "db-url",
 
     // TODO Change this to your database name:
     databaseName: "simplonvote",

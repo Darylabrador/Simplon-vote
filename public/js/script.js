@@ -44,13 +44,13 @@ if(btnAddLigne != undefined){
         let choiceLigne = document.createElement('div');
         choiceLigne.classList.add('row', 'no-gutters', 'mb-2', 'choiceDetails', 'align-items-center');
         choiceLigne.innerHTML = `
-    <div class="col">
-        <input type="text" name="choice" class="choice form-control" placeholder="Saisir votre option de réponse">
-    </div>
-    <div class="col-1 ml-2 text-right">
-        <button type="button" class="btn btn-outline-danger btnDelete"> &times; </button>
-    </div>
-    `;
+        <div class="col">
+            <input type="text" name="choice" class="choice form-control" placeholder="Saisir votre option de réponse">
+        </div>
+        <div class="col-1 ml-2 text-right">
+            <button type="button" class="btn btn-outline-danger btnDelete"> &times; </button>
+        </div>
+        `;
         choiceContainer.appendChild(choiceLigne);
         let allChoicesLignes = document.querySelectorAll('.choiceDetails');
         let btnDeleteLigne = document.querySelectorAll(".btnDelete");

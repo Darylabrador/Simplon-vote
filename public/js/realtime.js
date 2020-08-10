@@ -6,35 +6,32 @@ function displayMessage(type, message) {
         <div class="container-fluid mt-3">
             <div class="alert alert-${type} alert-dismissible fade show mt-0 flashMessage" role="alert">
                 <strong>${message}</strong>
-                <button id="btnRefresh" type="button" class="btn btn-secondary btn-sm">
-                    Rafraichir la page
-                </button>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
         </div>
         `;
-    let btnRefresh = document.querySelector('#btnRefresh');
-    btnRefresh.addEventListener('click', evt => {
+    
+    setTimeout(() =>{
         location.reload();
-    });
+    }, 3000);
 }
 
 socket.on('connection', () => {
-    console.log(socket.connected); // true
+    console.log(socket.connected);
 });
 
 socket.on('vote', data => {
     switch (data.action) {
         case 'create':
-            displayMessage('info', 'Un nouveau sujet vote est disponible');
+            displayMessage('success', 'Un nouveau sujet vote est disponible');
             break;
         case 'open':
-            displayMessage('info', 'Un vote est ouvert !');
+            displayMessage('success', 'Un vote est ouvert !');
             break;
         case 'result':
-            displayMessage('info', 'Le résultat d\'un vote est disponible !');
+            displayMessage('success', 'Le résultat d\'un vote est disponible !');
             break;
         default:
             break;
